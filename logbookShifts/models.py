@@ -15,6 +15,7 @@ class Logbook(models.Model):
     Requester = models.CharField(max_length=200)
     R_Status = models.CharField('Status',max_length=2,choices=STATUS_CHOICE, default=1)
     R_Solution= models.TextField('Requeste Solution')
+      
     def was_published_today(self):
         return self.B_Date.date() == datetime.date.today()
     def __str__(self):
