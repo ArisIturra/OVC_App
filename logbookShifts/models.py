@@ -16,11 +16,12 @@ class Requester(models.Model):
 
 class Logbook(models.Model):
 #	WayCall = models.CharField('Way Call requester',max_length=2,choices=WAYCALL_CHOICES)
+	requester = models.ForeignKey(Requester)
 	mail = models.ForeignKey(Mail)
 	phone = models.ForeignKey(Phone)
 	b_request = models.DateTimeField('Begin request')
 	e_request = models.DateTimeField('End request')
-	requester = models.ForeignKey(Requester)
+
 	r_solution= models.TextField('Requeste Solution') 
     
 #	R_Status = models.CharField('Status',max_length=2,choices=STATUS_CHOICE, default=1)
