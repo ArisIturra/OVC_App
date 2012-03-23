@@ -22,8 +22,6 @@ class Requester(models.Model):
 	def __unicode__(self):
 		return u'%s'%(self.requester)
 
-
-
 class Logbook(models.Model):
 	mail = models.ForeignKey(Mail,blank=True,null=True)
 	phone = models.ForeignKey(Phone,blank=True,null=True)
