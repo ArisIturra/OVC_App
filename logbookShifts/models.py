@@ -1,29 +1,40 @@
 from django.db import models
+from django.forms import ModelForm
 from django.contrib.localflavor.us.models import PhoneNumberField
 
-WAYCALL_CHOICES=(('Ph','phone'),('EM','E-Mail'),)
-STATUS_CHOICE=((1,'open'),(2,'close'),)
+WAYCALL_CHOICES=(('Ph','Phone'),('EM','Mail'),)
+STATUS_CHOICE=(('1','open'),('2','close'),)
+
+class Mail(models.Model):
+	r_email = models.EmailField('E-Mail requester')
+
+	def __unicode__(self):
+		return u'%s'%(self.r_email)
+
+class Phone(models.Model):
+	r_phone= PhoneNumberField('Phone requester')
+
+	def __unicode__(self):
+		return u'%s'%(self.r_phone)
+class Requester(models.Model):
+	requester = models.CharField('Requester',max_length=200)
+
+	def __unicode__(self):
+		return u'%s'%(self.requester)
+
 
 
 class Logbook(models.Model):
-    WayCall = models.CharField('Way Call requester',max_length=2,choices=WAYCALL_CHOICES)
-    R_Mail = models.EmailField('E-Mail requester')
-    R_Phone= PhoneNumberField('Phone requester')
-    B_Date = models.DateField('Begin date ')
-    B_Time = models.TimeField ('Begin time ')
-    E_Date = models.DateField('End date ')
-    E_Time = models.TimeField ('End time ')
-    Requester = models.CharField(max_length=200)
-    R_Status = models.CharField('Status',max_length=2,choices=STATUS_CHOICE, default=1)
-    R_Solution= models.TextField('Requeste Solution')
-         
-    def was_published_today(self):
-        return self.B_Date.date() == datetime.date.today()
-    def __str__(self):
-        return self.WayCall
+	mail = models.ForeignKey(Mail,blank=True,null=True)
+	phone = models.ForeignKey(Phone,blank=True,null=True)
+	b_request = models.DateTimeField('Begin request')
+	e_request = models.DateTimeField('End request')
+	requester = models.ForeignKey(Requester)
+	request	= models.TextField('Request') 
+	solution= models.TextField('Requeste Solution') 
+   	status = models.CharField('Status',max_length=1,choices=STATUS_CHOICE, default=1)	
 
-class Status(models.Model):
-    logbook = models.ForeignKey(Logbook)
-    Solution = models.CharField(max_length=200)
-    def __str__(self):
-        return self.WayCall
+	def __unicode__(self):
+		return u'%s %s'%(self.b_request,self.requester)
+
+ 
