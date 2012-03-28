@@ -22,9 +22,9 @@ class RutField(models.CharField):
 		defaults.update(kwargs)
 		return super(RutField, self).formfield(**defaults)
 
-class RutUser(User):
+class RutUser(models.Model):
 	"""User with app settings."""
 	rut  = RutField(_('RUT'),unique= True,help_text='12.345.678-K')
-
+    	user = models.ForeignKey(User, unique=True, related_name='profile')
 
 	 # Use UserManager to get the create_user method, etc.

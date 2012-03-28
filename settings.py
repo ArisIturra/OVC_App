@@ -146,4 +146,4 @@ LOGGING = {
     }
 }
 
-
+AUTH_PROFILE_MODULE = 'ditional_Rest.RutUser'
