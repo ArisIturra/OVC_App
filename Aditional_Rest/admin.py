@@ -25,11 +25,16 @@ class RecessAdmin(admin.ModelAdmin):
 
 
 class RecessRequestAdmin(admin.ModelAdmin):
-	def render_change_form(self, request, context, *args, **kwargs):
-		context['adminform'].form.fields['someField'].help_text = "Go to edit
-		page " + str(context['original'].anyFunction()) + " (will discard
-		changes)"
 
+
+	def render_change_form(self, request, context, *args, **kwargs):
+		self.change_form_template = 'admin/Aditional_Rest/recessrequest/change_form.html'
+
+	        extra = {
+			'ruser': RutUser.objects.get(user=request.user)
+      		}
+
+        	context.update(extra)
 		return super(RecessRequestAdmin, self).render_change_form(request, context,args, kwargs)
 
 
@@ -37,11 +42,5 @@ class RecessRequestAdmin(admin.ModelAdmin):
 
 admin.site.register(RutUser)
 admin.site.register(Recess,RecessAdmin)
-admin.site.register(RecessRequest)
-
-# Re-register UserAdmin
-#admin.site.unregister(User)
-#admin.site.register(User, MyUserAdmin)
-
-
+admin.site.register(RecessRequest,RecessRequestAdmin)
 

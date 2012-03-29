@@ -1,14 +1,35 @@
 {% extends "admin/change_form.html" %}
 
 {% block form_top %}
- <p>Insert meaningful help message here...</p>
+{% if ruser %}
 
-{{ user }} 
-{{ rutUser.rut }}
-{{ rutUser }}
+<table>
+<tr>
+	<th>Rut</th> 
+	<th>Nombre</th> 
+	<th>Grado</th> 
+	<th>centro de costo</th> 
+	<th>residencia</th> 
+	<th>cargo</th> 
 
- <li>
-        {{ property }}
-    </li>
+</tr>
+
+<tr>
+	<td>{{ ruser.rut }}</td> 
+	<td>{{ ruser.user.username }}</td> 
+	<td>{{ ruser.grade }}</td> 
+	<td>{{ ruser.cost_center }}</td> 
+	<td>{{ ruser.residece }}</td> 
+	<td>{{ ruser.legal_grade }}</td> 
+
+</tr>
+
+</table>
+
+{% endif %}
+
+
+
+
 {% endblock %}
 
