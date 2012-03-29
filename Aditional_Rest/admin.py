@@ -24,6 +24,15 @@ class RecessAdmin(admin.ModelAdmin):
 	list_filter = ['user','resolution']
 
 
+class RecessRequestAdmin(admin.ModelAdmin):
+	def render_change_form(self, request, context, *args, **kwargs):
+		context['adminform'].form.fields['someField'].help_text = "Go to edit
+		page " + str(context['original'].anyFunction()) + " (will discard
+		changes)"
+
+		return super(RecessRequestAdmin, self).render_change_form(request, context,args, kwargs)
+
+
 
 
 admin.site.register(RutUser)
