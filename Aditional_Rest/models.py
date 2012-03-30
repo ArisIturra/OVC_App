@@ -27,6 +27,12 @@ LEGAL_GRADE_CHOICES = (
 		(1,_('Contract')), 
 		(2,_('Honorarium')), 
 		)
+
+
+HALF_DAY_CHOICES = (
+		(0,_('AM')),
+		(1,_('PM')),
+		)
 class RutUser(models.Model):
 	"""User with app settings."""
 	rut  = RutField(_('RUT'),unique= True,help_text=_('12.345.678-K'))
@@ -37,6 +43,19 @@ class RutUser(models.Model):
 	legal_grade = models.IntegerField(choices=LEGAL_GRADE_CHOICES)
 	def __unicode__(self):
 		return '%s'%self.user.username
+	
+
+	def get_available_days(self):
+
+		acum = 0
+		for res in  Recess.objects.filter(user=self):
+			acum += res.available_days 	
+		return acum
+
+	def get_resolutions(self):
+
+		return 	Recess.objects.filter(user=self)
+
 
 
 class Recess(models.Model):
@@ -44,8 +63,9 @@ class Recess(models.Model):
 
 	user = models.ForeignKey(RutUser)
 	resolution = models.CharField(_('Resolution number'),max_length=10)
-	date = models.DateField(_('Resolution Date'))
+	resolution_date = models.DateField(_('Resolution Date'))
 	recess = models.FloatField(_('Recess days'),)
+	available_days = models.FloatField(_('Available days'))
 
 	from_date =  models.DateField(_('Resolution from date'), null=True,blank=True )
 	to_date =  models.DateField(_('Resolution to date'), null=True,blank=True )
@@ -57,8 +77,16 @@ class Recess(models.Model):
 
 
 
-
 class RecessRequest(models.Model):
 	"""Requet for a recess days"""
 
-	requested_days = models.IntegerField(_('Days'))
+	requested_days = models.FloatField(_('Days'))
+	user = models.ForeignKey(RutUser,editable=False)	
+	halfday = models.IntegerField(choices=HALF_DAY_CHOICES,null=True,blank=True)
+	begin  = models.DateField(_('Begin'))
+	end  = models.DateField(_('End'))
+
+
+	def __unicode__(self):
+		return "%s [%s-%s] from %s"%(self.requested_days,self.begin,self.end,self.user)
+

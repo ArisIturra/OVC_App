@@ -16,6 +16,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
 	(r'^$',redirect_to, {'url': '/admin'}),
+	(r'^details/', include('OVC_App.Aditional_Rest.urls')),
      url(r'^admin/', include(admin.site.urls)),
 
 )

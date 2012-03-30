@@ -1,16 +1,38 @@
 {% extends "admin/change_form.html" %}
+{% load i18n admin_modify adminmedia %}
+
+
 
 {% block form_top %}
 {% if ruser %}
 
+<SCRIPT TYPE="text/javascript">
+<!--
+function popup(mylink, windowname)
+{
+if (! window.focus)return true;
+var href;
+if (typeof(mylink) == 'string')
+   href=mylink;
+else
+   href=mylink.href;
+window.open(href, windowname, 'width=800,height=600,scrollbars=yes');
+return false;
+}
+//-->
+</SCRIPT>
+
 <table>
 <tr>
-	<th>Rut</th> 
-	<th>Nombre</th> 
-	<th>Grado</th> 
-	<th>centro de costo</th> 
-	<th>residencia</th> 
-	<th>cargo</th> 
+	<th>{% trans "R.U.T" %}</th> 
+	<th>{% trans "Name" %}</th> 
+	<th>{% trans "Grade" %}</th> 
+	<th>{% trans "Cost Center" %}</th> 
+	<th>{% trans "Resicence" %}</th> 
+	<th>{% trans "Legal Grade" %}</th>
+	<th>{% trans "Available days" %}</th>
+	<th>{% trans "Details" %}</th>
+	 
 
 </tr>
 
@@ -19,8 +41,10 @@
 	<td>{{ ruser.user.username }}</td> 
 	<td>{{ ruser.grade }}</td> 
 	<td>{{ ruser.cost_center }}</td> 
-	<td>{{ ruser.residece }}</td> 
-	<td>{{ ruser.legal_grade }}</td> 
+	<td>{{ ruser.residence }}</td> 
+	<td>{{ ruser.get_legal_grade_display }}</td> 
+	<td>{{ available_days }}</td> 
+	<td> <a href=/details/ onClick="return popup(this, 'notes')" > Ver </a></td> 
 
 </tr>
 
