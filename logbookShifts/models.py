@@ -35,4 +35,18 @@ class Logbook(models.Model):
 	def __unicode__(self):
 		return u'%s %s'%(self.b_request,self.requester)
 
+
+        def b_date(self):
+                return self.b_request.date()
+        def b_time(self):
+                return self.b_request.time()
+
+        def e_time(self):
+                return self.e_request.time()
+
+        def delta_time(self):
+                return  self.e_request-self.b_request
+
+        class Meta:
+                ordering = ['b_request']
  
