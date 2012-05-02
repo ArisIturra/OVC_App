@@ -49,6 +49,9 @@ class Logbook(models.Model):
         def delta_time(self):
                 return  self.e_request-self.b_request
 
+	def export_sumary(modeladmin, request, queryset):
+	        print queryset
+
         class Meta:
                 ordering = ['b_request']
  
