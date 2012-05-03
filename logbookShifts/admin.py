@@ -14,28 +14,35 @@ class LogbookAdmin(admin.ModelAdmin):
 
 	actions = ['export_sumary']
 	
-	def export_sumary(self, request, queryset):
+	def export_sumary(self, request, q):
 		# Create the HttpResponse object with the appropriate PDF headers.
-		response = HttpResponse(mimetype='application/pdf')
-    		response['Content-Disposition'] = 'attachment; filename=somefilename.pdf'	
-		# Create the PDF object, using the response object as its "file."
-    		p = canvas.Canvas(response)
+	
 
-    		p.setLineWidth(.3)
-		p.setFont('Times-Roman', 16)
-		
-		p.drawString(270,750,'Informe Turnos')
+		from django.contrib.admin.models import LogEntry
+		from django.contrib.contenttypes.models import ContentType
+		date = '%s al %s'%(q[0].b_request.date(),q.reverse()[0].b_request.date())
 		
 
-		p.setFont('Times-Roman-Bold', 12)
-		
-		p.drawString(270,700,'Informe Turnos')
+		print date
+		for v in q:
+			a = LogEntry.objects.first(object_repr=v)
+			print a
+				
 
+#		response = HttpResponse(mimetype='application/pdf')
+#    		response['Content-Disposition'] = 'attachment; filename=somefilename.pdf'	
+#    		p = canvas.Canvas(response)
+#    		p.setLineWidth(.3)
+#		p.setFont('Times-Roman', 16)
+#		p.drawString(270,750,'Informe Turnos')
+#		p.setFont('Times-Roman-Bold', 12)
+#		p.drawString(270,700,'Informe Turnos')
+#		p.showPage()
+#		p.save()	
 		
-		p.showPage()
-		p.save()	
+
 		self.message_user(request, "%s" % 'done')
-		return response
+#		return response
 	export_sumary.short_description = "Export"
 	
 
