@@ -75,6 +75,11 @@ class Recess(models.Model):
 	def __unicode__(self):
 		return "%s (%s)"%(self.resolution,self.user,)	
 
+STATUS_CHOICES = (
+                (0,_('Wanting approval')),
+                (1,_('Accepted')),
+                (2,_('Rejected')),
+                )
 
 
 class RecessRequest(models.Model):
@@ -85,7 +90,7 @@ class RecessRequest(models.Model):
 	halfday = models.IntegerField(choices=HALF_DAY_CHOICES,null=True,blank=True)
 	begin  = models.DateField(_('Begin'))
 	end  = models.DateField(_('End'))
-
+	status = models.IntegerField(choices=STATUS_CHOICES,editable=False,default=0)
 
 	def __unicode__(self):
 		return "%s [%s-%s] from %s"%(self.requested_days,self.begin,self.end,self.user)

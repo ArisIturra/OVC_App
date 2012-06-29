@@ -26,7 +26,8 @@ class RecessAdmin(admin.ModelAdmin):
 
 class RecessRequestAdmin(admin.ModelAdmin):
 
-
+	list_display = ('user','begin','end','requested_days','halfday','status')
+	list_filter = ['user','status']
 	def render_change_form(self, request, context, *args, **kwargs):
 		self.change_form_template = 'admin/Aditional_Rest/recessrequest/change_form.html'
 
