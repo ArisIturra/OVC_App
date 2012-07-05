@@ -35,6 +35,7 @@ class Logbook(models.Model):
 	def __unicode__(self):
 		return u'%s %s'%(self.b_request,self.requester)
 
+<<<<<<< HEAD
 
         def b_date(self):
                 return self.b_request.date()
@@ -50,3 +51,5 @@ class Logbook(models.Model):
         class Meta:
                 ordering = ['b_request']
  
+=======
+>>>>>>> additionalrest

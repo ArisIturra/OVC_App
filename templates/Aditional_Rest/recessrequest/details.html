@@ -1,0 +1,55 @@
+{% extends "admin/base.html" %}
+{% load adminmedia admin_list i18n %}
+
+{% block nav-global %} {% endblock %}
+{% block breadcrumbs %} {% endblock %}
+
+
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/changelists.css" />
+  {% if cl.formset %}
+    <link rel="stylesheet" type="text/css" href="{% admin_media_prefix %}css/forms.css" />
+  {% endif %}
+  {% if cl.formset or action_form %}
+    {% url admin:jsi18n as jsi18nurl %}
+    <script type="text/javascript" src="{{ jsi18nurl|default:'../../jsi18n/' }}"></script>
+  {% endif %}
+  {{ media.css }}
+  {% if not actions_on_top and not actions_on_bottom %}
+    <style>
+      #changelist table thead th:first-child {width: inherit}
+    </style>
+  {% endif %}
+{% endblock %}
+
+
+{% block bodyclass %}change-list{% endblock %}
+
+
+{% if results %}
+{% block content %}
+
+<table cellspacing="0" id="result_list" border=2>
+
+		<tr>
+			<th> {% trans "Resolution" %} </th>
+			<th> {% trans "Date" %}</th>	
+			<th> {% trans "Recess days" %} </th>	
+			<th> {% trans "Available Days" %} </th>	
+		{% for r in results %}
+			<tr class="{% cycle 'row1' 'row2' %}">
+				<td> {{r.resolution}} </td>
+				<td> {{r.resolution_date}} </td>
+				<td> {{r.recess}} </td>
+				<td> {{r.available_days}} </td>
+			</tr>
+		{% endfor %}
+
+
+
+</table>
+
+{% endblock %}
+{% endif %}
