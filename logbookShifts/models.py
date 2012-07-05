@@ -37,6 +37,7 @@ class Logbook(models.Model):
 
         def b_date(self):
                 return self.b_request.date()
+
         def b_time(self):
                 return self.b_request.time()
 
