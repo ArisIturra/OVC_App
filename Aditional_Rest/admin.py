@@ -8,7 +8,7 @@ class RecessAdmin(admin.ModelAdmin):
 	fieldsets = [
 		(None, {'fields':[
 				('user','resolution'),
-				('resolution_date','recess','available_days'),
+				('resolution_date','recess',),
 				],
 			}
 		),

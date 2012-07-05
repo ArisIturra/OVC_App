@@ -47,10 +47,8 @@ class RutUser(models.Model):
 
 	def get_available_days(self):
 
-		acum = 0
-		for res in  Recess.objects.filter(user=self):
-			acum += res.available_days 	
-		return acum
+		return  Recess.objects.filter(user=self).order_by('id').reverse()[0].available_days
+
 
 	def get_resolutions(self):
 
@@ -65,13 +63,24 @@ class Recess(models.Model):
 	resolution = models.CharField(_('Resolution number'),max_length=10)
 	resolution_date = models.DateField(_('Resolution Date'))
 	recess = models.FloatField(_('Recess days'),)
-	available_days = models.FloatField(_('Available days'))
+	available_days = models.FloatField(_('Available days'),null=True,blank=True,default=0)
 
 	from_date =  models.DateField(_('Resolution from date'), null=True,blank=True )
 	to_date =  models.DateField(_('Resolution to date'), null=True,blank=True )
 	resolution_days = models.FloatField(_('Days'), null=True,blank=True)
 
-	
+	def save(self,*args, **kwargs):
+		
+		recess = Recess.objects.filter(user=self.user)
+		count = 0
+		
+		for r in recess:
+			count += r.recess
+			print count, r.recess	
+		self.available_days = (count + self.recess)
+		
+		super(Recess,self).save(*args, **kwargs)
+
 	def __unicode__(self):
 		return "%s (%s)"%(self.resolution,self.user,)	
 
@@ -87,7 +96,7 @@ class RecessRequest(models.Model):
 
 	requested_days = models.FloatField(_('Days'))
 	user = models.ForeignKey(RutUser,editable=False)	
-	halfday = models.IntegerField(choices=HALF_DAY_CHOICES,null=True,blank=True)
+	halfday = models.IntegerField(_('Halfday'),choices=HALF_DAY_CHOICES,null=True,blank=True)
 	begin  = models.DateField(_('Begin'))
 	end  = models.DateField(_('End'))
 	status = models.IntegerField(choices=STATUS_CHOICES,editable=False,default=0)
