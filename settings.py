@@ -27,12 +27,13 @@ DATABASES = {
 # timezone as the operating system.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'America/Santiago'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es_CL'
 
+LOCALE_PATHS = ( '/var/www/OVC_App/conf/locale',)
 SITE_ID = 1
 
 # If you set this to False, Django will make some optimizations so as not
@@ -98,6 +99,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
 )
 
 ROOT_URLCONF = 'OVC_App.urls'
@@ -106,6 +109,7 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+	'/var/www/OVC_App/templates'
 )
 
 INSTALLED_APPS = (
@@ -120,6 +124,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
+    'OVC_App.Aditional_Rest',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -144,3 +149,5 @@ LOGGING = {
         },
     }
 }
+
+AUTH_PROFILE_MODULE = 'ditional_Rest.RutUser'
