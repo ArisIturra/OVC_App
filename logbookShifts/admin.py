@@ -9,11 +9,32 @@ from django.http import HttpResponse
 
 #admin.site.disable_action('delete_selected')
 class LogbookAdmin(admin.ModelAdmin):
-        list_display = ('b_date','b_time','e_time','delta_time','request','solution')
+        list_display = ('b_date','b_time','e_time','delta_time','request','solution',)
         date_hierarchy = ('b_request')
 
 	actions = ['export_sumary']
-	
+
+
+	def save_model(self, request, obj, form, change):
+        	obj.author = request.user
+        	obj.save()	
+
+
+	def render_change_list(self, request, context, *args, **kwargs):
+
+  		self.change_list_template = 'admin/logbookShifts/logbook/change_list.html'
+
+                ctr = '10'
+                extra = {
+                        'ctr': ctr,
+                }
+
+                context.update(extra)
+                return super(LogbookAdmin, self).render_change_list(request, context,args, kwargs)
+
+
+
+
 	def export_sumary(self, request, q):
 		# Create the HttpResponse object with the appropriate PDF headers.
 	
