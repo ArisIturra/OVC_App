@@ -1,6 +1,10 @@
 from django.db import models
+from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django.contrib.localflavor.us.models import PhoneNumberField
+
+
+
 
 WAYCALL_CHOICES=(('Ph','Phone'),('EM','Mail'),)
 STATUS_CHOICE=(('1','open'),('2','close'),)
@@ -31,6 +35,9 @@ class Logbook(models.Model):
 	request	= models.TextField('Request') 
 	solution= models.TextField('Requeste Solution') 
    	status = models.CharField('Status',max_length=1,choices=STATUS_CHOICE, default=1)	
+	author = models.ForeignKey(User,null=True,blank=True,editable=False)
+
+
 
 	def __unicode__(self):
 		return u'%s %s'%(self.b_request,self.requester)
@@ -46,6 +53,9 @@ class Logbook(models.Model):
 
         def delta_time(self):
                 return  self.e_request-self.b_request
+
+	def export_sumary(modeladmin, request, queryset):
+	        print queryset
 
         class Meta:
                 ordering = ['b_request']
