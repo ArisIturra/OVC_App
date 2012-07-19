@@ -9,31 +9,29 @@ from django.http import HttpResponse
 
 #admin.site.disable_action('delete_selected')
 class LogbookAdmin(admin.ModelAdmin):
-        list_display = ('b_date','b_time','e_time','delta_time','request','solution',)
+        list_display = ('b_date','author','b_time','e_time','delta_time','request','solution',)
         date_hierarchy = ('b_request')
 
-	actions = ['export_sumary']
+	actions = ['get_required_time',]#'export_sumary']
 
 
 	def save_model(self, request, obj, form, change):
         	obj.author = request.user
         	obj.save()	
 
-
-	def render_change_list(self, request, context, *args, **kwargs):
-
-  		self.change_list_template = 'admin/logbookShifts/logbook/change_list.html'
-
-                ctr = '10'
-                extra = {
-                        'ctr': ctr,
-                }
-
-                context.update(extra)
-                return super(LogbookAdmin, self).render_change_list(request, context,args, kwargs)
-
-
-
+	def get_required_time(self, request, q):
+		import datetime
+		d = {}	
+		for v in q:
+		
+			try:
+				d[str(v.author)] += v.delta_time()
+			except KeyError:
+				d[str(v.author)] = datetime.timedelta(0, 0)	
+				d[str(v.author)] += v.delta_time()
+		
+		for r in d:
+			self.message_user(request, "%s\t%s" %(r,d[r]))
 
 	def export_sumary(self, request, q):
 		# Create the HttpResponse object with the appropriate PDF headers.
