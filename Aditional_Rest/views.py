@@ -10,7 +10,7 @@ from OVC_App.Aditional_Rest.models import *
 @csrf_exempt
 def details(request):
 	
-	ruser = RutUser.objects.get(user=request.user)
+	ruser = Employee.objects.get(user=request.user)
 	context =  {	'results': ruser.get_resolutions(),
 		}
         return render_to_response('Aditional_Rest/recessrequest/details.html',

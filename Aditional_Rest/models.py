@@ -37,18 +37,17 @@ class RutUser(models.Model):
 	"""User with app settings."""
 	rut  = RutField(_('RUT'),unique= True,help_text=_('12.345.678-K'))
     	user = models.ForeignKey(User, unique=True, related_name='profile')
+
+class Employee(RutUser):
 	grade = models.CharField(_('Grade'),max_length=50)	
 	cost_center =  models.IntegerField(_('Cost Center'),)
 	residence  = models.CharField(_('Recidence'),max_length=50)
 	legal_grade = models.IntegerField(choices=LEGAL_GRADE_CHOICES)
+	recess_days = models.FloatField(_('Recess days'),null=True,blank=True,default=0,editable=False)
+
 	def __unicode__(self):
 		return '%s'%self.user.username
 	
-
-	def get_available_days(self):
-
-		return  Recess.objects.filter(user=self).order_by('id').reverse()[0].available_days
-
 
 	def get_resolutions(self):
 
@@ -59,11 +58,11 @@ class RutUser(models.Model):
 class Recess(models.Model):
 	"""Rest day wined"""
 
-	user = models.ForeignKey(RutUser)
+	user = models.ForeignKey(Employee)
 	resolution = models.CharField(_('Resolution number'),max_length=10)
 	resolution_date = models.DateField(_('Resolution Date'))
-	recess = models.FloatField(_('Recess days'),)
-	available_days = models.FloatField(_('Available days'),null=True,blank=True,default=0)
+	recess_days = models.FloatField(_('Recess days'),)
+ 	used_days = models.FloatField(_('Used days'),default=0,editable=False)
 
 	from_date =  models.DateField(_('Resolution from date'), null=True,blank=True )
 	to_date =  models.DateField(_('Resolution to date'), null=True,blank=True )
@@ -71,14 +70,8 @@ class Recess(models.Model):
 
 	def save(self,*args, **kwargs):
 		
-		recess = Recess.objects.filter(user=self.user)
-		count = 0
-		
-		for r in recess:
-			count += r.recess
-			print count, r.recess	
-		self.available_days = (count + self.recess)
-		
+		self.user.recess_days += self.recess_days#TODO:WARNING se acumula al editar
+		self.user.save()	
 		super(Recess,self).save(*args, **kwargs)
 
 	def __unicode__(self):
