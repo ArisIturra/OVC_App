@@ -29,6 +29,18 @@ LEGAL_GRADE_CHOICES = (
 		)
 
 
+STATUS_CHOICES = (
+                (0,_('Wanting approval')),
+                (1,_('Accepted')),
+                (2,_('Rejected')),
+                )
+
+RECESS_STATUS_CHOICES = (
+                (0,_('Available')),
+                (1,_('Used')),
+                (2,_('Transition')),
+                )
+
 HALF_DAY_CHOICES = (
 		(0,_('AM')),
 		(1,_('PM')),
@@ -56,39 +68,42 @@ class Employee(RutUser):
 
 
 class Recess(models.Model):
-	"""Rest day wined"""
+	"""Rest day winned"""
 
 	user = models.ForeignKey(Employee)
 	resolution = models.CharField(_('Resolution number'),max_length=10)
 	resolution_date = models.DateField(_('Resolution Date'))
 	recess_days = models.FloatField(_('Recess days'),)
  	used_days = models.FloatField(_('Used days'),default=0,editable=False)
+	status = models.IntegerField(choices=RECESS_STATUS_CHOICES,editable=False,default=0)
 
 	from_date =  models.DateField(_('Resolution from date'), null=True,blank=True )
 	to_date =  models.DateField(_('Resolution to date'), null=True,blank=True )
 	resolution_days = models.FloatField(_('Days'), null=True,blank=True)
 
+
+	
+
 	def save(self,*args, **kwargs):
-		
-		self.user.recess_days += self.recess_days#TODO:WARNING se acumula al editar
-		self.user.save()	
+	
+		if self.pk == None:	
+			self.user.recess_days += self.recess_days
+			self.user.save()	
+		else:
+			pass #TODO: Find the way to edit without alter recess_days
+
+
+
 		super(Recess,self).save(*args, **kwargs)
 
 	def __unicode__(self):
 		return "%s (%s)"%(self.resolution,self.user,)	
 
-STATUS_CHOICES = (
-                (0,_('Wanting approval')),
-                (1,_('Accepted')),
-                (2,_('Rejected')),
-                )
-
-
 class RecessRequest(models.Model):
 	"""Requet for a recess days"""
 
 	requested_days = models.FloatField(_('Days'))
-	user = models.ForeignKey(RutUser,editable=False)	
+	user = models.ForeignKey(Employee,editable=False)	
 	halfday = models.IntegerField(_('Halfday'),choices=HALF_DAY_CHOICES,null=True,blank=True)
 	begin  = models.DateField(_('Begin'))
 	end  = models.DateField(_('End'))
@@ -96,4 +111,13 @@ class RecessRequest(models.Model):
 
 	def __unicode__(self):
 		return "%s [%s-%s] from %s"%(self.requested_days,self.begin,self.end,self.user)
+	
+	def save(self,*args, **kwargs):
+		
+	"""Get all recess and discount requested days en mark as transition"""
+		emp = user.get_resolutions()
+
+		print emp
+		super(RecessRequest,self).save(*args, **kwargs)
+	
 
