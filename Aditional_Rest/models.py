@@ -114,7 +114,7 @@ class RecessRequest(models.Model):
 	
 	def save(self,*args, **kwargs):
 		
-	"""Get all recess and discount requested days en mark as transition"""
+	#"""Get all recess and discount requested days en mark as transition"""
 		emp = user.get_resolutions()
 
 		print emp
