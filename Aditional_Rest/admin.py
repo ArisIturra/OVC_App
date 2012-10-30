@@ -8,7 +8,7 @@ class RecessAdmin(admin.ModelAdmin):
 	fieldsets = [
 		(None, {'fields':[
 				('user','resolution'),
-				('resolution_date','recess',),
+				('resolution_date','recess_days',),
 				],
 			}
 		),
@@ -19,45 +19,52 @@ class RecessAdmin(admin.ModelAdmin):
 		),
 		]
 
-	list_display = ('user',	'resolution','resolution_date','recess','available_days')
+	list_display = ('user',	'resolution','resolution_date','recess_days','used_days')
 	date_hierarchy = 'resolution_date'
 	list_filter = ['user','resolution']
 
 
 class RecessRequestAdmin(admin.ModelAdmin):
 
+#	list_display = ('user','begin','end','requested_days','halfday','status')
 	list_display = ('user','begin','end','requested_days','halfday','status')
 	list_filter = ['user','status']
 	def render_change_form(self, request, context, *args, **kwargs):
 		self.change_form_template = 'admin/Aditional_Rest/recessrequest/change_form.html'
 
-		ruser = RutUser.objects.get(user=request.user)
+		ruser = Employee.objects.get(user=request.user)
+		print ruser
 	        extra = {
 			'ruser': ruser,
-			'available_days': ruser.get_available_days()
+			'recess_days': ruser.recess_days
       		}
 
         	context.update(extra)
 		return super(RecessRequestAdmin, self).render_change_form(request, context,args, kwargs)
 
-    	def queryset(self, request):
-        	"""Limit Pages to those that belong to the request's user."""
+ #   	def queryset(self, request):
+ #       	"""Limit Pages to those that belong to the request's user."""
 
-        	qs = super(RecessRequestAdmin, self).queryset(request)
+ #       	qs = super(RecessRequestAdmin, self).queryset(request)
 
-        	if request.user.is_superuser:
-            		return qs
+  #      	if request.user.is_superuser:
+   #         		return qs
 
 
-		ruser = RutUser.objects.get(user=request.user)
-        	return qs.filter(user=ruser)
+#		ruser = RutUser.objects.get(user=request.user)
+ #       	return qs.filter(user=ruser)
 
 	def save_model(self, request, obj, form, change):
 		ruser = RutUser.objects.get(user=request.user)
 		obj.user = ruser
         	obj.save()
+class EmployeeAdmin(admin.ModelAdmin):
+	list_display = ('user','recess_days','grade','cost_center','residence','legal_grade')
+	
 
-admin.site.register(RutUser)
+#admin.site.register(RutUser)
+
+admin.site.register(Employee,EmployeeAdmin)
 admin.site.register(Recess,RecessAdmin)
 admin.site.register(RecessRequest,RecessRequestAdmin)
 

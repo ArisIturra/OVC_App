@@ -4,6 +4,7 @@
 
 
 {% block form_top %}
+((admin/Aditional_Rest/recessrequest/change_form.html))
 {% if ruser %}
 
 <SCRIPT TYPE="text/javascript">
@@ -43,7 +44,7 @@ return false;
 	<td>{{ ruser.cost_center }}</td> 
 	<td>{{ ruser.residence }}</td> 
 	<td>{{ ruser.get_legal_grade_display }}</td> 
-	<td>{{ available_days }}</td> 
+	<td>{{ recess_days }}</td> 
 	<td> <a href=/details/ onClick="return popup(this, 'notes')" > Ver </a></td> 
 
 </tr>

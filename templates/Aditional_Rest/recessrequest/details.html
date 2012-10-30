@@ -3,7 +3,7 @@
 
 {% block nav-global %} {% endblock %}
 {% block breadcrumbs %} {% endblock %}
-
+{% block branding %} <h1 id="site-name">{% trans 'Details' %}</h1> {% endblock %}
 
 
 {% block extrastyle %}
@@ -31,25 +31,29 @@
 {% if results %}
 {% block content %}
 
+<br>
+<center>
 <table cellspacing="0" id="result_list" border=2>
 
 		<tr>
 			<th> {% trans "Resolution" %} </th>
 			<th> {% trans "Date" %}</th>	
 			<th> {% trans "Recess days" %} </th>	
-			<th> {% trans "Available Days" %} </th>	
+			<th> {% trans "Used Days" %} </th>	
+			<th> {% trans "edit header!!!" %} </th>	
 		{% for r in results %}
 			<tr class="{% cycle 'row1' 'row2' %}">
 				<td> {{r.resolution}} </td>
 				<td> {{r.resolution_date}} </td>
-				<td> {{r.recess}} </td>
-				<td> {{r.available_days}} </td>
+				<td> {{r.recess_days}} </td>
+				<td> {{r.used_days}} </td>
+				<td> {{r.get_status_display }} </td>
 			</tr>
 		{% endfor %}
 
 
 
 </table>
-
+</center>
 {% endblock %}
 {% endif %}
