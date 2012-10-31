@@ -15,7 +15,9 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-	(r'^$',redirect_to, {'url': '/admin'}),
+	(r'^index/$','statistics.views.cinematics'),
+	(r'^$','statistics.views.cinematics'),
+	(r'^auto/'    ,include('OVC_App.statistics.urls')),
 	(r'^details/', include('OVC_App.Aditional_Rest.urls')),
 	url(r'^admin/', include(admin.site.urls)),
 
