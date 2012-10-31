@@ -1,0 +1,3 @@
+svn checkout http://django-colors.googlecode.com/svn/trunk/ django-colors-read-only
+yum install python-reportlab
+hg clone https://code.google.com/p/django-gmapi/
