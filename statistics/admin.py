@@ -36,7 +36,12 @@ class EvaluationAdmin(admin.ModelAdmin):
         date_hierarchy = 'date'
         save_as = True
 
-admin.site.register(Station)
+class StationAdmin(admin.ModelAdmin):
+
+	list_display = ('name','longitude','latitude')
+
+
+admin.site.register(Station,StationAdmin)
 admin.site.register(Evaluation,EvaluationAdmin)
 admin.site.register(Choice,ChoiceAdmin)
 
