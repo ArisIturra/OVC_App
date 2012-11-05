@@ -220,42 +220,50 @@ if(e.id == 'chart_div3')
 //-->
 </script>
 
-<table border="3" cellpadding="5" cellspacing="5" width="100%">
-	<tr>
-		<th rowspan="2" style="display:table-cell; vertical-align:middle">
-			<div id="map_div" style="width: 400px; height: 300;"></div> 
-		</th>
-		<td>
-			<div id="table_div"></div>
-		</td>
-	</tr>
-	<tr>
-		<td aling="center">
-			<table border="0">
-			<tr>
-				<td style="display:table-cell; vertical-align:middle" >
-		  		<a href="#" onclick="toggle_visibility('chart_div1');">Mesual</a>
-				<br>
-		  		<a href="#" onclick="toggle_visibility('chart_div2');">Anual</a>
-				<br>
-		  		<a href="#" onclick="toggle_visibility('chart_div3');">Histórico</a>
-			 </td> 	
-			<td>
-			<div id="chart_div1" style="align: center; width: 700px; height: 300px;"></div>
-			<div id="chart_div2" style="align: center; width: 700px; height: 300px;"></div>
-			<div id="chart_div3" style="align: center; width: 700px; height: 300px;"></div>
-			</td>
-			</tr>
-			</table>
-		</td>
-		<td> 
 
-			<iframe src="http://nodos.ovc" frameborder="0" height="100%" width="100%" > </iframe>
+<table border="2" width="100%">
+	<tr>
+     		<td>
+			<div id="map_div" style="width: 400px; height: 300;"></div> 
 		</td>
-	
-		
-	</tr>
-</table>
+     		<td>
+			<table>
+				<tr>
+					<td>  
+						<div id="table_div"></div>
+				 	</td>
+				</tr>
+				<tr>
+					<td>  
+						<table border="0">
+						<tr>
+							<td style="display:table-cell; vertical-align:middle" >
+		  						<a href="#" onclick="toggle_visibility('chart_div1');">Mesual</a>
+								<br>
+		  						<a href="#" onclick="toggle_visibility('chart_div2');">Anual</a>
+								<br>
+		  						<a href="#" onclick="toggle_visibility('chart_div3');">Histórico</a>
+			 				</td> 	
+							<td>
+								<div id="chart_div1" style="align: center; width: 700px; height: 300px;"></div>
+								<div id="chart_div2" style="align: center; width: 700px; height: 300px;"></div>
+								<div id="chart_div3" style="align: center; width: 700px; height: 300px;"></div>
+							</td>
+						</tr>			
+						</table>
+
+					</td>
+				</tr>
+
+			</table>
+
+		</td>
+		 <td>
+			<iframe src="http://190.13.145.58" frameborder="0" height="800" width="500" > </iframe>
+		</td>
+   </tr>
+ </table>
+
 
 </body>
 </div>
