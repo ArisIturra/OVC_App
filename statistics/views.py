@@ -172,13 +172,13 @@ def auto(request,data):
 
 		percent = samples/3600
 
-		if percent == 100:
+		if percent <= 98:
 			c = Choice.objects.get(name='Verde')
 		elif percent == 0:
 			c = Choice.objects.get(name='Rojo')
 		elif percent > 0 and percent < 50:
 			c = Choice.objects.get(name='Naranjo')
-		elif percent >= 50 and percent < 100:
+		elif percent >= 50 and percent < 98:
 			c = Choice.objects.get(name='Amarillo')
 		else:
 			c = Choice.objects.get(name='Rojo')
@@ -191,6 +191,6 @@ def auto(request,data):
 		e.hour = hour
 		e.save()
 		return HttpResponse('Ok')
-	except:
+	except ValueError as e:
 
-		return HttpResponse('Fail')
+		return HttpResponse(e)
