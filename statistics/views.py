@@ -172,7 +172,7 @@ def auto(request,data):
 
 		percent = samples/3600
 
-		if percent <= 98:
+		if percent >= 98:
 			c = Choice.objects.get(name='Verde')
 		elif percent == 0:
 			c = Choice.objects.get(name='Rojo')
