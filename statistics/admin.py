@@ -14,9 +14,19 @@ class ChoiceAdmin(admin.ModelAdmin):
                 ColorChoiceField:{'widget':customfields.ColorWidget}
         }
 
+class EvaluationAdmin(admin.ModelAdmin):
+
+        fieldsets = [
+                (None, {'fields':['date','hour']}),
+                (None, {'fields':['station','choice']}),
+        ]
+        list_display = ('station','date','hour','choice')
+        list_filter = ['station','choice']
+        date_hierarchy = 'date'
+        save_as = True
 
 
 admin.site.register(Station)
-admin.site.register(Evaluation)
+admin.site.register(Evaluation,EvaluationAdmin)
 admin.site.register(Choice,ChoiceAdmin)
 

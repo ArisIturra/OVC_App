@@ -12,7 +12,8 @@ class Station(models.Model):
 	longitude = models.FloatField()
 	elevation = models.FloatField()
 	def __unicode__(self):
-		return "%s (%s,%s)"%(self.name,self.latitude,self.longitude)
+		#return "%s (%s,%s)"%(self.name,self.latitude,self.longitude)
+		return "%s "%(self.name)
 	class Meta:
         	ordering = ['name']
 
