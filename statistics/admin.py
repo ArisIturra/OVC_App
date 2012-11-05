@@ -32,7 +32,7 @@ class EvaluationAdmin(admin.ModelAdmin):
                 (None, {'fields':['station','choice']}),
         ]
         list_display = ('station','date','hour','choice')
-        list_filter = ['station']
+        list_filter = ['station','choice']
         date_hierarchy = 'date'
         save_as = True
 
