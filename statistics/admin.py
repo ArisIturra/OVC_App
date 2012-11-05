@@ -25,6 +25,16 @@ class EvaluationAdmin(admin.ModelAdmin):
         date_hierarchy = 'date'
         save_as = True
 
+class EvaluationAdmin(admin.ModelAdmin):
+
+        fieldsets = [
+                (None, {'fields':['date','hour']}),
+                (None, {'fields':['station','choice']}),
+        ]
+        list_display = ('station','date','hour','choice')
+        list_filter = ['station']
+        date_hierarchy = 'date'
+        save_as = True
 
 admin.site.register(Station)
 admin.site.register(Evaluation,EvaluationAdmin)
