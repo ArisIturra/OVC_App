@@ -67,7 +67,7 @@
 	{% for item in data.items %}
 		gData.setCell({{ forloop.counter|add:"-1" }},0,{{ item.1.0.0 }});
 		gData.setCell({{ forloop.counter|add:"-1" }},1,{{ item.1.0.1 }});
-		gData.setCell({{ forloop.counter|add:"-1" }},2,{{ item.1.0.1 }});
+		gData.setCell({{ forloop.counter|add:"-1" }},2,'{{ item.1.0.1 }}');
 		gData.setCell({{ forloop.counter|add:"-1" }},3,'{{ item.1.0.0 }}');
 	{%endfor%} 
 
