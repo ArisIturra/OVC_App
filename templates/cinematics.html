@@ -1,0 +1,280 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+        <div class="breadcrumbs">
+                <a href="/admin">{% trans 'Admin' %}</a>
+        </div>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">{% trans 'Stations Statistics' %}</h1>
+{% endblock %}
+
+
+{% block extrahead %}
+  <style type="text/css">
+      .header {
+        color: purple;
+        background-color: #abc;
+        font-size: 40px;
+        text-align: center;
+      }
+    </style>   
+
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+   <script type="text/javascript">
+      google.load('visualization', '1',
+          {'packages': ['table', 'map', 'corechart','imagechart']});
+      google.setOnLoadCallback(initialize);
+
+      function initialize() {
+        // The URL here is the URL of the spreadsheet.
+        // This is where the data is.
+        var query = new google.visualization.Query(
+            'https://spreadsheets.google.com/pub?key=pCQbetd-CptF0r8qmCOlZGg');
+        query.send(draw);
+      }
+
+      function draw(response) {
+        if (response.isError()) {
+          alert('Error in query');
+        }
+
+                var geoData = new google.visualization.DataTable();
+        geoData.addColumn('string', 'Estacion')
+        geoData.addColumn('string', 'Mes');
+        geoData.addColumn('string', 'Año');
+        geoData.addColumn('string', 'Histórico');
+        geoData.addRows({{ data|length}});
+	
+
+	{% for item in data.items %}
+		geoData.setCell({{ forloop.counter|add:"-1" }},0,'{{ item.0 }}');
+		geoData.setCell({{ forloop.counter|add:"-1" }},1,'{{ item.1.1.0 }}%');
+		geoData.setCell({{ forloop.counter|add:"-1" }},2,'{{ item.1.1.1 }}%');
+		geoData.setCell({{ forloop.counter|add:"-1" }},3,'{{ item.1.1.2 }}%');
+	{%endfor%} 
+	
+	var gData = new google.visualization.DataTable();
+	 
+	gData.addRows({{ data|length}});
+	gData.addColumn('number', 'LATITUDE', 'Latitude');
+	gData.addColumn('number', 'LONGITUDE', 'Longitude');
+	gData.addColumn('number', 'VALUE', 'Value'); 
+	gData.addColumn('string', 'HOVER', 'HoverText');
+
+	{% for item in data.items %}
+		gData.setCell({{ forloop.counter|add:"-1" }},0,{{ item.1.0.0|stringformat:"f" }});
+		gData.setCell({{ forloop.counter|add:"-1" }},1,{{ item.1.0.1|stringformat:"f" }});
+		gData.setCell({{ forloop.counter|add:"-1" }},2,0);
+		gData.setCell({{ forloop.counter|add:"-1" }},3,'{{ item.0 }}');
+	{%endfor%} 
+
+
+	
+        var geoView = new google.visualization.DataView(gData);
+        geoView.setColumns([0, 1]);
+
+        var table =
+            new google.visualization.Table(document.getElementById('table_div'));
+        table.draw(geoData, {showRowNumber: false,sortColumn:0,sortAscending:true  });
+
+        var map =  new google.visualization.Map(document.getElementById('map_div'));
+        map.draw(geoView, {showTip: false});
+
+        // Set a 'select' event listener for the table.
+        // When the table is selected,
+        // we set the selection on the map.
+        google.visualization.events.addListener(table, 'select',
+            function() {
+              map.setSelection(table.getSelection());
+            });
+
+        // Set a 'select' event listener for the map.
+        // When the map is selected,
+        // we set the selection on the table.
+        google.visualization.events.addListener(map, 'select',
+            function() {
+              table.setSelection(map.getSelection());
+            });
+
+
+        //document.getElementById('chart_div'));
+
+
+	var dTable = new google.visualization.DataTable();
+	dTable.addColumn('string','Estacion');
+	dTable.addColumn('number','100%');
+	dTable.addColumn('number','50% +');
+	dTable.addColumn('number','1% +');
+	dTable.addColumn('number','0%');
+	dTable.addRows({{ data|length}});
+	
+	{% for item in data.items %}
+                dTable.setCell({{ forloop.counter|add:"-1" }},0,'{{ item.0 }}');
+                dTable.setCell({{ forloop.counter|add:"-1" }},1,{{ item.1.2.0.0 }});
+                dTable.setCell({{ forloop.counter|add:"-1" }},2,{{ item.1.2.0.1 }});
+                dTable.setCell({{ forloop.counter|add:"-1" }},3,{{ item.1.2.0.2 }});
+                dTable.setCell({{ forloop.counter|add:"-1" }},4,{{ item.1.2.0.3 }});
+        {%endfor%} 
+	
+	var options = { colors:['#00ae00','#ffff66','#ff6633','#dc2300'],
+		'isStacked': true, 'legend': 'rigth','title':'Detalle Mensual',
+            'vAxis': {'title': 'Evaluaciones' }, 
+            'hAxis': {'title': 'Estaciones','slantedText':true,'slantedTextAngle':90 } 
+
+		};
+	var chart = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
+	chart.draw(dTable, options);
+
+	var dTable = new google.visualization.DataTable();
+	dTable.addColumn('string','Estacion');
+	dTable.addColumn('number','100%');
+	dTable.addColumn('number','50% +');
+	dTable.addColumn('number','1% +');
+	dTable.addColumn('number','0%');
+	dTable.addRows({{ data|length}});
+	
+	{% for item in data.items %}
+                dTable.setCell({{ forloop.counter|add:"-1" }},0,'{{ item.0 }}');
+                dTable.setCell({{ forloop.counter|add:"-1" }},1,{{ item.1.2.1.0 }});
+                dTable.setCell({{ forloop.counter|add:"-1" }},2,{{ item.1.2.1.1 }});
+                dTable.setCell({{ forloop.counter|add:"-1" }},3,{{ item.1.2.1.2 }});
+                dTable.setCell({{ forloop.counter|add:"-1" }},4,{{ item.1.2.1.3 }});
+        {%endfor%} 
+	
+	var options = { colors:['#00ae00','#ffff66','#ff6633','#dc2300'],
+		'isStacked': true, 'legend': 'rigth','title':'Detalle Anual',
+            'vAxis': {'title': 'Evaluaciones' }, 
+            'hAxis': {'title': 'Estaciones','slantedText':true,'slantedTextAngle':90 } 
+
+		};
+	var chart = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
+	chart.draw(dTable, options);
+
+	var dTable = new google.visualization.DataTable();
+	dTable.addColumn('string','Estacion');
+	dTable.addColumn('number','100%');
+	dTable.addColumn('number','50% +');
+	dTable.addColumn('number','1% +');
+	dTable.addColumn('number','0%');
+	dTable.addRows({{ data|length}});
+	
+	{% for item in data.items %}
+                dTable.setCell({{ forloop.counter|add:"-1" }},0,'{{ item.0 }}');
+                dTable.setCell({{ forloop.counter|add:"-1" }},1,{{ item.1.2.2.0 }});
+                dTable.setCell({{ forloop.counter|add:"-1" }},2,{{ item.1.2.2.1 }});
+                dTable.setCell({{ forloop.counter|add:"-1" }},3,{{ item.1.2.2.2 }});
+                dTable.setCell({{ forloop.counter|add:"-1" }},4,{{ item.1.2.2.3 }});
+        {%endfor%} 
+	
+	var options = { colors:['#00ae00','#ffff66','#ff6633','#dc2300'],
+		'isStacked': true, 'legend': 'rigth','title':'Detalle Histórico',
+            'vAxis': {'title': 'Evaluaciones' }, 
+            'hAxis': {'title': 'Estaciones','slantedText':true,'slantedTextAngle':90 } 
+
+		};
+	var chart = new google.visualization.ColumnChart(document.getElementById('chart_div3'));
+	chart.draw(dTable, options);
+ document.getElementById('chart_div2').style.display = 'none';
+                document.getElementById('chart_div3').style.display = 'none';
+
+      }
+    </script>
+
+
+{% endblock %}
+
+
+{% block content %}
+<div id="content-main">
+
+<body>
+
+<script type="text/javascript">
+<!--
+    function toggle_visibility(id) {
+       var e = document.getElementById(id);
+	if(e.id == 'chart_div1')
+	{
+          	e.style.display = 'block';
+		document.getElementById('chart_div2').style.display = 'none';
+		document.getElementById('chart_div3').style.display = 'none';
+	}
+if(e.id == 'chart_div2')
+	{
+          	e.style.display = 'block';
+		document.getElementById('chart_div1').style.display = 'none';
+		document.getElementById('chart_div3').style.display = 'none';
+	}
+if(e.id == 'chart_div3')
+	{
+          	e.style.display = 'block';
+		document.getElementById('chart_div2').style.display = 'none';
+		document.getElementById('chart_div1').style.display = 'none';
+	}
+
+    }
+//-->
+</script>
+
+
+<table border="2" width="100%">
+	<tr>
+     		<td>
+			<div id="map_div" style="width: 500px; height: 900px;"></div> 
+		</td>
+     		<td>
+			<table>
+				<tr>
+					<td>  
+						<div id="table_div"></div>
+				 	</td>
+				</tr>
+				<tr>
+					<td>  
+						<table border="0">
+						<tr>
+							<td style="display:table-cell; vertical-align:middle" >
+		  						<a href="#" onclick="toggle_visibility('chart_div1');">Mesual</a>
+								<br>
+		  						<a href="#" onclick="toggle_visibility('chart_div2');">Anual</a>
+								<br>
+		  						<a href="#" onclick="toggle_visibility('chart_div3');">Histórico</a>
+			 				</td> 	
+							<td>
+								<div id="chart_div1" style="align: center; width: 700px; height: 300px;"></div>
+								<div id="chart_div2" style="align: center; width: 700px; height: 300px;"></div>
+								<div id="chart_div3" style="align: center; width: 700px; height: 300px;"></div>
+							</td>
+						</tr>			
+						</table>
+
+					</td>
+				</tr>
+
+			</table>
+
+		</td>
+		 <td>
+			<table>
+				<tr>
+					<td><iframe src="http://190.13.145.58" frameborder="0" height="450" width="400" > </iframe></td>
+				</tr>
+
+				<tr>
+					<td><iframe src="http://190.13.145.58/hudson" frameborder="0" height="450" width="500" > </iframe></td>
+				</tr>
+
+			</table>
+		
+		</td>
+   </tr>
+ </table>
+
+
+</body>
+</div>
+{% endblock %}
+

@@ -124,7 +124,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'OVC_App.Aditional_Rest',
+    #'OVC_App.Aditional_Rest',
+    'OVC_App.statistics',
 )
 
 # A sample logging configuration. The only tangible logging
@@ -151,3 +152,17 @@ LOGGING = {
 }
 
 AUTH_PROFILE_MODULE = 'ditional_Rest.RutUser'
+
+
+#EASY_MAPS_GOOGLE_KEY = 'ABQIAAAAV-kFzQ6_G8Fm5xmio80sOBSOlrrtDN8A6YLbZo6J09_sND2WcxSwDZDRcBSXtY0dF4LshJX45DfiOg'
+EASY_MAPS_GOOGLE_KEY = ''
+
+
+COLORPICKER_COLORS = [
+    '00ae00',
+    'ffff66',
+    'ff6633',
+    'dc2300',
+    'ffffff',
+]
+
