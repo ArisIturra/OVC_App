@@ -126,6 +126,7 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     'OVC_App.Aditional_Rest',
     'OVC_App.statistics',
+    'OVC_App.seismicity',
 )
 
 # A sample logging configuration. The only tangible logging
