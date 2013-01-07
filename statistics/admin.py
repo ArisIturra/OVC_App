@@ -38,7 +38,7 @@ class EvaluationAdmin(admin.ModelAdmin):
 
 class StationAdmin(admin.ModelAdmin):
 
-	list_display = ('name','longitude','latitude')
+	list_display = ('name','longitude','latitude','elevation')
 
 
 admin.site.register(Station,StationAdmin)

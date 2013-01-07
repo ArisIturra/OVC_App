@@ -45,6 +45,12 @@ HALF_DAY_CHOICES = (
 		(0,_('AM')),
 		(1,_('PM')),
 		)
+
+ACTIONS_CHOICES = (
+		(0,_('Admin')),
+		(1,_('User')),
+		)
+
 class RutUser(models.Model):
 	"""User with app settings."""
 	rut  = RutField(_('RUT'),unique= True,help_text=_('12.345.678-K'))
@@ -56,9 +62,11 @@ class Employee(RutUser):
 	residence  = models.CharField(_('Recidence'),max_length=50)
 	legal_grade = models.IntegerField(choices=LEGAL_GRADE_CHOICES)
 	recess_days = models.FloatField(_('Recess days'),null=True,blank=True,default=0,editable=False)
+	accions = models.IntegerField(choices=ACTIONS_CHOICES,null=False,default=1)	
+
 
 	def __unicode__(self):
-		return '%s'%self.user.username
+		return '%s %s'%(self.user.username,self.rut)
 	
 
 	def get_resolutions(self):
@@ -109,15 +117,9 @@ class RecessRequest(models.Model):
 	end  = models.DateField(_('End'))
 	status = models.IntegerField(choices=STATUS_CHOICES,editable=False,default=0)
 
-	def __unicode__(self):
-		return "%s [%s-%s] from %s"%(self.requested_days,self.begin,self.end,self.user)
+	#def __unicode__(self):
+	#	return "%s [%s-%s] from %s"%(self.requested_days,self.begin,self.end,self.user)
 	
 	def save(self,*args, **kwargs):
-		
-	#"""Get all recess and discount requested days en mark as transition"""
-		emp = user.get_resolutions()
-
-		print emp
+		"""Using save_model in admin.py """
 		super(RecessRequest,self).save(*args, **kwargs)
-	
-
