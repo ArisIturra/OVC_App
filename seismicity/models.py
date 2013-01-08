@@ -48,17 +48,17 @@ class Seism(models.Model):
 	p_hh = MMIntegerField('P arrival HH',max_value=23,min_value=0) 
 	p_mm = MMIntegerField('MM',max_value=59,min_value=0) 
 	p_ss = MMIntegerField('SS',max_value=59,min_value=0) 
-	p_ms = MMIntegerField('MS',max_value=99,min_value=0)
+	p_ms = MMIntegerField('MS',max_value=999,min_value=0)
 	
 	s_hh = MMIntegerField('S arrival HH',max_value=23,min_value=0,null=True,blank=True) 
 	s_mm = MMIntegerField('MM',max_value=59,min_value=0,null=True,blank=True) 
 	s_ss = MMIntegerField('SS',max_value=59,min_value=0,null=True,blank=True) 
-	s_ms = MMIntegerField('MS',max_value=99,min_value=0,null=True,blank=True) 
+	s_ms = MMIntegerField('MS',max_value=999,min_value=0,null=True,blank=True) 
 	
 	c_hh = MMIntegerField('Coda HH',max_value=23,min_value=0,null=True,blank=True) 
 	c_mm = MMIntegerField('MM',max_value=59,min_value=0,null=True,blank=True) 
 	c_ss = MMIntegerField('SS',max_value=59,min_value=0,null=True,blank=True) 
-	c_ms = MMIntegerField('MS',max_value=99,min_value=0,null=True,blank=True) 
+	c_ms = MMIntegerField('MS',max_value=999,min_value=0,null=True,blank=True) 
 
 	arrival_station = models.ForeignKey('statistics.Station',
 			null=True,blank=True,
