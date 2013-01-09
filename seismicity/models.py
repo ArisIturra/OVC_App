@@ -92,7 +92,7 @@ class Seism(models.Model):
 	
 
 	def __unicode__(self):
-		return str('sismo.%s.%.2d%.2d'%(self.event_date.strftime('%Y%m%d'),
+		return str('%s.%.2d%.2d'%(self.event_date.strftime('%Y%m%d'),
 					self.p_hh,self.p_mm)
 			  )
 

@@ -1,6 +1,9 @@
 from seismicity.models import *
 from statistics.models import *
 from django.contrib import admin
+
+from django.http import HttpResponse
+import mimetypes
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.utils.translation import ugettext_lazy as _
 
@@ -56,9 +59,41 @@ class SeismAdmin(admin.ModelAdmin):
 
 	list_display = ('seismName','arrival_station','latitude','longitude','deep','location','classification')
 	list_filter = ['arrival_station','location','classification']
-	
+
+
+
+	actions = ['export_kml',]
+
+
+	def export_kml(self,request,q):
+		
+		import simplekml
+		kml = simplekml.Kml()
+
+		for seism in q:
+			if seism.located and seism.deep:
+#				kml.newpoint(name='%s'%seism.deep, coords=[(seism.longitude,seism.latitude )])
+
+				pnt = kml.newpoint(name='%s'%seism.deep)
+				print type(seism.deep),seism
+				pnt.coords = [(seism.longitude,seism.latitude,float(seism.deep)*-1)]
+				pnt.style.iconstyle.icon.href = 'http://maps.google.com/mapfiles/kml/shapes/shaded_dot.png'
+				pnt.altitudemode = simplekml.AltitudeMode.absolute
+
+		from datetime import datetime
+		name = datetime.now().strftime('%Y%m%d-%H%M')+'.kml'
+#		kml.save(name)
+
+
+		
+		response = HttpResponse(kml.kml(), mimetype='application/vnd.google-earth.kml+xml')
+		response['Content-Disposition'] = 'filename=%s'%name
+		self.message_user(request,_('Saved %s'%name))
+
+		return response
+
 	def seismName(self,obj):
-		return str('sismo.%s.%.2d%.2d%.2d'%(obj.event_date.strftime('%Y%m%d'),
+		return str('event at %s.%.2d%.2d%.2d'%(obj.event_date.strftime('%Y%m%d'),
                                         obj.p_hh,obj.p_mm,obj.p_ss)
                           )
 	seismName.short_description = 'Id'
