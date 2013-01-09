@@ -87,7 +87,8 @@ class SeismAdmin(admin.ModelAdmin):
 
 		return response
 
-	def export_to_gmt_script
+	def export_to_gmt_script(self,request,q):
+
 		self.message_user(request,_('Not implemented yet'))
 
 
