@@ -62,41 +62,42 @@ class SeismAdmin(admin.ModelAdmin):
 
 
 
-	actions = ['export_kml',]
+	actions = ['export_to_kml','export_to_gmt_script']
 
 
-	def export_kml(self,request,q):
+	def export_to_kml(self,request,q):
 		
 		import simplekml
 		kml = simplekml.Kml()
 
 		for seism in q:
 			if seism.located and seism.deep:
-#				kml.newpoint(name='%s'%seism.deep, coords=[(seism.longitude,seism.latitude )])
 
 				pnt = kml.newpoint(name='%s'%seism.deep)
-				print type(seism.deep),seism
 				pnt.coords = [(seism.longitude,seism.latitude,float(seism.deep)*-1)]
 				pnt.style.iconstyle.icon.href = 'http://maps.google.com/mapfiles/kml/shapes/shaded_dot.png'
-				pnt.altitudemode = simplekml.AltitudeMode.absolute
+				pnt.altitudemode = simplekml.AltitudeMode.clamptoground
 
 		from datetime import datetime
 		name = datetime.now().strftime('%Y%m%d-%H%M')+'.kml'
-#		kml.save(name)
-
 
 		
 		response = HttpResponse(kml.kml(), mimetype='application/vnd.google-earth.kml+xml')
 		response['Content-Disposition'] = 'filename=%s'%name
-		self.message_user(request,_('Saved %s'%name))
 
 		return response
+
+	def export_to_gmt_script
+		self.message_user(request,_('Not implemented yet'))
+
 
 	def seismName(self,obj):
 		return str('event at %s.%.2d%.2d%.2d'%(obj.event_date.strftime('%Y%m%d'),
                                         obj.p_hh,obj.p_mm,obj.p_ss)
                           )
 	seismName.short_description = 'Id'
+
+
 admin.site.register(Seism,SeismAdmin)
 admin.site.register(Location)
 admin.site.register(Classification)
