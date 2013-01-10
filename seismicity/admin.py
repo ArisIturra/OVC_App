@@ -96,7 +96,7 @@ class SeismAdmin(admin.ModelAdmin):
 		try:
 	
 			try:
-				f = open('seisms.sh', 'wr')
+				f = open('tmp/seisms.sh', 'wr')
 				f.write('#!/sbin/sh\n')
 				
 				f.write('ps=%s\n'%filename)
@@ -140,16 +140,13 @@ class SeismAdmin(admin.ModelAdmin):
 
 				f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y1.3i \\\n')
 				f.write('-O -K -I0.3 -Ac -B500::/:ms.n.m.:  >> $ps \n')
-			
-
-
 
 			finally:
 		        	f.close()
 		except IOError:
 			pass
 
-		f=open('seisms.sh', 'r')
+		f=open('tmp/seisms.sh', 'r')
 		response = HttpResponse(f.read(),mimetype='application/x-sh')
 		response['Content-Disposition'] = 'filename=seisms.sh'
 		return response
