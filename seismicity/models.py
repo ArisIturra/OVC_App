@@ -92,13 +92,13 @@ class Seism(models.Model):
 	
 
 	def __unicode__(self):
-		return str('%s.%.2d%.2d'%(self.event_date.strftime('%Y%m%d'),
-					self.p_hh,self.p_mm)
+		return str('%s.%.2d%.2d %s'%(self.event_date.strftime('%Y%m%d'),
+					self.p_hh,self.p_mm,self.p_ms)
 			  )
 
 
 	class Meta:
-		ordering = ['event_date']
+		ordering = ['event_date','p_hh','p_mm','p_ss']
 
 import time
 def handle_uploaded_file(f):

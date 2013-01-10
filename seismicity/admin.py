@@ -89,12 +89,74 @@ class SeismAdmin(admin.ModelAdmin):
 
 	def export_to_gmt_script(self,request,q):
 
-		self.message_user(request,_('Not implemented yet'))
 
+		filename = 'mapd.ps'
+		title = 'Hudson 26/11/2012'
+		label = 'Longitud'
+		try:
+	
+			try:
+				f = open('seisms.sh', 'wr')
+				f.write('#!/sbin/sh\n')
+				
+				f.write('ps=%s\n'%filename)
+				f.write('gmtset GRID_PEN_PRIMARY thinnest,-\n')
+				f.write('makecpt -Cseis -T0/50/10 > deep.cpt\n')
+				
+				f.write('grdimage w75s50.grd -R-73.5/-72.5/-46.2/-45.5 \\\n')
+				f.write('-JM5i -E100 \\\n')
+				f.write('-B0.25g0.25:."%s:" -Cg.cpt \\\n'%title)
+				f.write('-X1i -Y5i \\\n')
+				f.write('-P -K > $ps \n')
+				
+				f.write('psbasemap -R -J -O -K -Lf72:45:00W/46:08:00S/-45N/20k+u  >> $ps \n')
+				f.write('psxy -R -J -O -Cdeep.cpt  -Sci -Wthinnest -K << END >> $ps \n')
+			
+				for seism in q:
+                        		if seism.located and seism.deep:
+						f.write('%s %s %s %s \n'%(
+							seism.longitude,
+							seism.latitude,
+							seism.deep,
+							'0.1',#MAGNITUDE
+							))
+				f.write('END\n')
+
+				
+			
+				f.write('psxy -R-73.5/-72.5/-50/2 \\\n')
+				f.write('-JX5i/1.4i  -Wthick  -X0i -Y-2.0i -Cdeep.cpt  -Sc0.1i \\\n')
+				f.write('-B0.25g0.25:"%s":/10g10:"Km":WS -O -K << END >> $ps \n'%label)
+				
+				for seism in q:
+                        		if seism.located and seism.deep:
+						f.write('%s %s %s %s \n'%(
+							seism.longitude,
+							seism.deep *-1,
+							seism.deep,
+							seism.deep,
+							))
+				f.write('END\n')
+
+				f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y1.3i \\\n')
+				f.write('-O -K -I0.3 -Ac -B500::/:ms.n.m.:  >> $ps \n')
+			
+
+
+
+			finally:
+		        	f.close()
+		except IOError:
+			pass
+
+		f=open('seisms.sh', 'r')
+		response = HttpResponse(f.read(),mimetype='application/x-sh')
+		response['Content-Disposition'] = 'filename=seisms.sh'
+		return response
 
 	def seismName(self,obj):
-		return str('event at %s.%.2d%.2d%.2d'%(obj.event_date.strftime('%Y%m%d'),
-                                        obj.p_hh,obj.p_mm,obj.p_ss)
+		return str('%s.%.2d%.2d%.2d.%.3d'%(obj.event_date.strftime('%Y%m%d'),
+                                        obj.p_hh,obj.p_mm,obj.p_ss,obj.p_ms)
                           )
 	seismName.short_description = 'Id'
 
