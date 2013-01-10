@@ -98,7 +98,8 @@ class Seism(models.Model):
 
 
 	class Meta:
-		ordering = ['event_date','p_hh','p_mm','p_ss']
+		ordering = ['event_date','p_hh','p_mm','p_ss','p_ms']
+		unique_together  = (('event_date','p_hh','p_mm','p_ss','p_ms'))
 
 import time
 def handle_uploaded_file(f):
