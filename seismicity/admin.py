@@ -58,7 +58,7 @@ class SeismAdmin(admin.ModelAdmin):
 	date_hierarchy = 'event_date'
 
 	list_display = ('seismName','arrival_station','latitude','longitude','deep','location','classification')
-	list_filter = ['arrival_station','location','classification']
+	list_filter = ['arrival_station','location','classification','checked']
 
 
 
