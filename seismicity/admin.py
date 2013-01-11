@@ -90,7 +90,7 @@ class SeismAdmin(admin.ModelAdmin):
 	def export_to_gmt_script(self,request,q):
 
 
-		filename = 'mapd.ps'
+		filename = 'map.ps'
 		title = 'Hudson 26/11/2012'
 		label = 'Longitud'
 		try:
@@ -102,7 +102,9 @@ class SeismAdmin(admin.ModelAdmin):
 				f.write('ps=%s\n'%filename)
 				f.write('gmtset GRID_PEN_PRIMARY thinnest,-\n')
 				f.write('makecpt -Cseis -T0/50/10 > deep.cpt\n')
+				f.write('makecpt -Ctopo -T0/2500/10 > g.cpt\n')
 				
+
 				f.write('grdimage w75s50.grd -R-73.5/-72.5/-46.2/-45.5 \\\n')
 				f.write('-JM5i -E100 \\\n')
 				f.write('-B0.25g0.25:."%s:" -Cg.cpt \\\n'%title)
@@ -140,6 +142,8 @@ class SeismAdmin(admin.ModelAdmin):
 
 				f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y1.3i \\\n')
 				f.write('-O -K -I0.3 -Ac -B500::/:ms.n.m.:  >> $ps \n')
+				f.write('ps2pdf $ps\n')
+				f.write('rm $ps deep.cpt g.cpt -f\n')
 
 			finally:
 		        	f.close()
