@@ -93,6 +93,7 @@ class SeismAdmin(admin.ModelAdmin):
 		filename = 'map.ps'
 		title = 'Hudson 26/11/2012'
 		label = 'Longitud'
+		cota = '180' #TODO:TRANSLATE
 		try:
 	
 			try:
@@ -100,9 +101,10 @@ class SeismAdmin(admin.ModelAdmin):
 				f.write('#!/sbin/sh\n')
 				
 				f.write('ps=%s\n'%filename)
+				f.write('cota=%s\n'%cota)
 				f.write('gmtset GRID_PEN_PRIMARY thinnest,-\n')
 				f.write('makecpt -Cseis -T0/50/10 > deep.cpt\n')
-				f.write('makecpt -Ctopo -T0/2500/10 > g.cpt\n')
+				f.write('makecpt -Ctopo -T0/2000/$cota > g.cpt\n')
 				
 
 				f.write('grdimage w75s50.grd -R-73.5/-72.5/-46.2/-45.5 \\\n')
@@ -110,6 +112,10 @@ class SeismAdmin(admin.ModelAdmin):
 				f.write('-B0.25g0.25:."%s:" -Cg.cpt \\\n'%title)
 				f.write('-X1i -Y5i \\\n')
 				f.write('-P -K > $ps \n')
+				
+
+				f.write('grdcontour w75s50.grd -R-73.5/-72.5/-46.2/-45.5 \\\n')
+				f.write('-JM5i -C$cota  -P -K  -O >> $ps \n')
 				
 				f.write('psbasemap -R -J -O -K -Lf72:45:00W/46:08:00S/-45N/20k+u  >> $ps \n')
 				f.write('psxy -R -J -O -Cdeep.cpt  -Sci -Wthinnest -K << END >> $ps \n')
@@ -143,7 +149,7 @@ class SeismAdmin(admin.ModelAdmin):
 				f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y1.3i \\\n')
 				f.write('-O -K -I0.3 -Ac -B500::/:ms.n.m.:  >> $ps \n')
 				f.write('ps2pdf $ps\n')
-				f.write('rm $ps deep.cpt g.cpt -f\n')
+				f.write('rm $ps deep.cpt g.cpt .gmtcommands4 .gmtdefaults4 -f\n')
 
 			finally:
 		        	f.close()
