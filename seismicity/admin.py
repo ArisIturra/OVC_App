@@ -62,9 +62,12 @@ class SeismAdmin(admin.ModelAdmin):
 
 
 
-	actions = ['export_to_kml','export_to_gmt_script']
+	actions = [	'export_to_kml',
+			'export_to_gmt_script',
+			'export_to_3D_plot'
+			]
 
-
+		
 	def export_to_kml(self,request,q):
 		
 		import simplekml
@@ -86,6 +89,46 @@ class SeismAdmin(admin.ModelAdmin):
 		response['Content-Disposition'] = 'filename=%s'%name
 
 		return response
+
+
+
+	def export_to_3D_plot(self,request,q):
+	
+
+		filename = 'map.ps'
+		title = 'Hudson 26/11/2012'
+		label = 'Longitud'
+		cota = '180' #TODO:TRANSLATE
+		try:
+	
+			try:
+				f = open('tmp/seisms.m', 'wr')
+				f.write('\n')
+				f.write('\n')
+				f.write('\n')
+				f.write('\n')
+				f.write('\n')
+	
+
+				data =''
+				for seism in q:
+                        		if seism.located and seism.deep:
+						data += '%s,%s,%s,"%s",'%(
+							seism.longitude,
+							seism.latitude,
+							seism.deep,
+							'o',
+							)
+				
+				data= data[:-1]
+				f.write('plot3(%s) \n'%data)
+	
+
+			finally:
+		        	f.close()
+		except IOError:
+			pass
+
 
 	def export_to_gmt_script(self,request,q):
 
