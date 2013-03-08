@@ -6,7 +6,6 @@ from django.http import HttpResponse
 import mimetypes
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.utils.translation import ugettext_lazy as _
-
 class SeismAdminForm(forms.ModelForm):
 	stations = forms.ModelMultipleChoiceField(
 			queryset=Station.objects.all(), 
@@ -132,11 +131,26 @@ class SeismAdmin(admin.ModelAdmin):
 
 	def export_to_gmt_script(self,request,q):
 
-
+		
 		filename = 'map.ps'
-		title = 'Hudson 26/11/2012'
+		title = date.today().strftime('%Y/%m/%d')
 		label = 'Longitud'
 		cota = '180' #TODO:TRANSLATE
+
+		locale=[]
+		for seism in q:
+			if seism.located and seism.deep:
+				locale.append((seism.longitude, seism.latitude))
+
+		upper= map(max, zip(*locale))
+		lower= map(min, zip(*locale))
+				
+		center = [((upper[0]+lower[0])/2),((upper[1]+lower[1])/2)]
+		delta = [abs((lower[0]-upper[0])),abs((lower[1]-upper[1]))]
+
+
+		contourn = [	(lower[0]-(delta[0]/5),upper[0]+(delta[1]/5)),
+				(lower[1]-(delta[1]/5),upper[1]+(delta[1]/5))]
 		try:
 	
 			try:
@@ -148,19 +162,23 @@ class SeismAdmin(admin.ModelAdmin):
 				f.write('gmtset GRID_PEN_PRIMARY thinnest,-\n')
 				f.write('makecpt -Cseis -T0/50/10 > deep.cpt\n')
 				f.write('makecpt -Ctopo -T0/2000/$cota > g.cpt\n')
-				
-
-				f.write('grdimage w75s50.grd -R-73.5/-72.5/-46.2/-45.5 \\\n')
+				f.write('grdimage grid.grd -R%s/%s/%s/%s \\\n'%(
+					contourn[0][0],contourn[0][1],
+					contourn[1][0],contourn[1][1]
+					))	
 				f.write('-JM5i -E100 \\\n')
-				f.write('-B0.25g0.25:."%s:" -Cg.cpt \\\n'%title)
+				f.write('-B%sg%s:."%s:" -Cg.cpt \\\n'%(0.5,0.5,title))
 				f.write('-X1i -Y5i \\\n')
 				f.write('-P -K > $ps \n')
 				
-
-				f.write('grdcontour w75s50.grd -R-73.5/-72.5/-46.2/-45.5 \\\n')
+	
+				f.write('grdcontour grid.grd -R%s/%s/%s/%s \\\n'%(
+					contourn[0][0],contourn[0][1],
+					contourn[1][0],contourn[1][1]
+					))	
 				f.write('-JM5i -C$cota  -P -K  -O >> $ps \n')
+#escala				f.write('psbasemap -R -J -O -K -Lf72:45:00W/46:08:00S/-45N/20k+u  >> $ps \n')
 				
-				f.write('psbasemap -R -J -O -K -Lf72:45:00W/46:08:00S/-45N/20k+u  >> $ps \n')
 				f.write('psxy -R -J -O -Cdeep.cpt  -Sci -Wthinnest -K << END >> $ps \n')
 			
 				for seism in q:
@@ -175,10 +193,14 @@ class SeismAdmin(admin.ModelAdmin):
 
 				
 			
-				f.write('psxy -R-73.5/-72.5/-50/2 \\\n')
+				f.write('psxy -R%s/%s/-50/2 \\\n'%(
+					contourn[0][0],contourn[0][1],
+   					 ))
 				f.write('-JX5i/1.4i  -Wthick  -X0i -Y-2.0i -Cdeep.cpt  -Sc0.1i \\\n')
-				f.write('-B0.25g0.25:"%s":/10g10:"Km":WS -O -K << END >> $ps \n'%label)
-				
+				f.write('-B%sg%s:"%s":/%sg%s:"Km":WS -O -K << END >> $ps \n'%(
+					0.5,0.5,label,
+					10,10,
+					))
 				for seism in q:
                         		if seism.located and seism.deep:
 						f.write('%s %s %s %s \n'%(
@@ -190,7 +212,7 @@ class SeismAdmin(admin.ModelAdmin):
 				f.write('END\n')
 
 				f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y1.3i \\\n')
-				f.write('-O -K -I0.3 -Ac -B500::/:ms.n.m.:  >> $ps \n')
+				f.write('-O -K -I0.3 -Ac -B500::/:m.s.n.m.:  >> $ps \n')
 				f.write('ps2pdf $ps\n')
 				f.write('rm $ps deep.cpt g.cpt .gmtcommands4 .gmtdefaults4 -f\n')
 

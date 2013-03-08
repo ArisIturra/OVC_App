@@ -81,8 +81,8 @@ class Seism(models.Model):
 	
 	frecuency = models.CharField(max_length=50,null=True,blank=True)
 	located = models.BooleanField()
-	latitude = models.FloatField(null=True,blank=True)
-	longitude = models.FloatField(null=True,blank=True)
+	latitude = models.FloatField(null=True,blank=True,help_text='-45.966')
+	longitude = models.FloatField(null=True,blank=True,help_text='-73.112')
         deep = models.FloatField(null=True,blank=True)
 	local_magnitude = models.FloatField(null=True,blank=True)
 	duration_magnitude = models.FloatField(null=True,blank=True)
