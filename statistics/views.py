@@ -77,6 +77,16 @@ def index(request):
 	cinematics = c.get_cinematics()		
 	return render_to_response('index.html', locals() )
 
+
+
+@csrf_exempt
+def ev(request):
+	
+	stations_list = Station.objects.all()
+	return render_to_response('ev.html',locals())
+
+
+
 @csrf_exempt
 def cinematics(request):
 	from statistics.reports import Report

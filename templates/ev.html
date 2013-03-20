@@ -1,0 +1,103 @@
+{% extends "admin/base_site.html" %}
+{% load i18n %}
+
+{% block breadcrumbs %}
+        <div class="breadcrumbs">
+                <a href="/">{% trans 'Index' %}</a> |
+                <a href="/admin">{% trans 'Admin' %}</a> 
+        </div>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">{% trans 'Stations Statistics' %}</h1>
+{% endblock %}
+
+
+{% block extrahead %}
+  <style type="text/css">
+      .header {
+        color: purple;
+        background-color: #abc;
+        font-size: 40px;
+        text-align: center;
+      }
+    </style>   
+
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+   <script type="text/javascript">
+    </script>
+{% endblock %}
+
+
+{% block content %}
+<div id="content-main">
+
+<body>
+
+
+<input type="checkbox" id="check_all_1" name="check_all_1" title="Select All" />
+<label for="check_all_1">Select All</label>
+
+<script>
+function selectAll(frmElement, chkElement) {
+    alert('asdf');
+}
+document.getElementById("check_all_1").onclick = function() {
+    selectAll(document.wizard_form, this);
+}
+</script>
+
+
+
+
+
+
+	<table border=2>
+	 {% for item in stations_list %}
+         <tr>	
+		 <td align='right'>
+		 	<input type="checkbox" id={{forloop.counter|add:"-1"}} name={{item}} title={{item}}>
+			<label for={{forloop.counter|add:"-1"}}> {{ item }} </label>
+		</td>
+		<td> 
+			<DIV ID="result">Put text here</DIV>
+		</td>		
+			
+	</tr>
+		<script>
+			function selectAll(frmElement, chkElement) {
+				  alert(chkElement.name);
+				txt = document.getElementById("result");
+				txt.adf= 'holi'//TODO:sadfasdfasdfasdfasdf;
+	
+
+
+				}
+			
+
+
+			document.getElementById({{forloop.counter|add:"-1"}}).onclick = function() {
+    				selectAll(document.wizard_form, this);
+			}
+		</script>
+
+
+       	 {%endfor%}
+
+	</table>
+   <script type="text/javascript">
+	if(boxName.checked = true) { 
+		function showHideText(boxName,divName) { 
+			if(boxName.checked = true) { 
+				showObject(divName); 
+			} 
+			else { 
+			hideObject(divName); 
+			} 
+}
+    </script>
+
+</body>
+</div>
+{% endblock %}
+

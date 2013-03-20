@@ -25,16 +25,28 @@ class EvaluationAdmin(admin.ModelAdmin):
         date_hierarchy = 'date'
         save_as = True
 
-class EvaluationAdmin(admin.ModelAdmin):
+#	actions = ['get_report']
 
-        fieldsets = [
-                (None, {'fields':['date','hour']}),
-                (None, {'fields':['station','choice']}),
-        ]
-        list_display = ('station','date','hour','choice')
-        list_filter = ['station','choice']
-        date_hierarchy = 'date'
-        save_as = True
+#	def get_report(self,request,q):
+#		from statistics.reports import Report
+
+#	        rep = Report()
+#		data = rep.all()
+#		print data
+#		for ev in q:
+#			for d in data:
+#				print d
+
+#class EvaluationAdmin(admin.ModelAdmin):
+
+#        fieldsets = [
+#                (None, {'fields':['date','hour']}),
+#                (None, {'fields':['station','choice']}),
+#        ]
+#        list_display = ('station','date','hour','choice')
+#        list_filter = ['station','choice']
+#        date_hierarchy = 'date'
+#        save_as = True
 
 class StationAdmin(admin.ModelAdmin):
 
