@@ -99,20 +99,24 @@ def get3DPie(result):
 
 @csrf_exempt
 def ev(request):
-	if not request.user.is_authenticated():
-                return HttpResponseRedirect('/admin')
+#	if not request.user.is_authenticated():
+#                return HttpResponseRedirect('/admin')
 	from django.shortcuts import render	
 	if request.method == 'POST': # If the form has been submitted...
 		form = GetEvForm(request.POST) # A form bound to the POST data
         	if form.is_valid(): # All validation rules pass
             	# Process the data in form.cleaned_data
 			stations_data = {}
+			try:
+				sdate = datetime.datetime.strptime(form.data['start_date'],'%d/%m/%Y').strftime('%Y-%m-%d')	
+				edate = datetime.datetime.strptime(form.data['end_date'],'%d/%m/%Y').strftime('%Y-%m-%d')	
+			except:
+				sdate = form.data['start_date']
+				edate = form.data['end_date']
 			for station in request.POST.getlist('stations'):
-				suma1=0
-				suma2=0
 				s = Station.objects.filter(pk=station)
 				evs = Evaluation.objects.filter(
-					date__range=[form.data['start_date'],form.data['end_date']],
+					date__range=[sdate,edate],
 					station=s
 					)
 				result = [0,0,0,0]
