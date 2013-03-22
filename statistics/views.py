@@ -4,8 +4,6 @@ from django.http import HttpResponse
 from django.template import Context, loader
 
 from statistics.models import *
-#from manualData.forms import *
-import statistics.charts
 
 from django.shortcuts import render_to_response
 from django.contrib import messages
@@ -26,8 +24,10 @@ from django.conf import settings
 from django import template
 
 from time import gmtime, strftime
+from statistics.forms import *
 
 import datetime
+import statistics.charts
 
 class MapForm(forms.Form):
     map = forms.Field(widget=GoogleMap(attrs={'width':510, 'height':510}))
@@ -79,8 +79,63 @@ def index(request):
 
 
 
+def get3DPie(result):
+	from pygooglechart import PieChart3D
+
+# Create a chart object of 250x100 pixels
+	chart = PieChart3D(250, 100)
+# Add some data
+	chart.add_data(result)
+# Assign the labels to the pie data
+	
+	chart.set_pie_labels(['1','2','3','4'])
+# Print the chart URL
+	return chart.get_url()
+
+# Download the chart
+#	chart.download('pie-hello-world.png')
+
+	
+
 @csrf_exempt
 def ev(request):
+	if not request.user.is_authenticated():
+                return HttpResponseRedirect('/admin')
+	from django.shortcuts import render	
+	if request.method == 'POST': # If the form has been submitted...
+		form = GetEvForm(request.POST) # A form bound to the POST data
+        	if form.is_valid(): # All validation rules pass
+            	# Process the data in form.cleaned_data
+			stations_data = {}
+			for station in request.POST.getlist('stations'):
+				suma1=0
+				suma2=0
+				s = Station.objects.filter(pk=station)
+				evs = Evaluation.objects.filter(
+					date__range=[form.data['start_date'],form.data['end_date']],
+					station=s
+					)
+				result = [0,0,0,0]
+				for e in evs:
+					if e.choice.weight == 100:
+						result[0]=result[0]+1
+					if e.choice.weight == 75:
+						result[1]=result[1]+1
+					if e.choice.weight == 25:
+						result[2]=result[2]+1
+					if e.choice.weight == 0:
+						result[3]=result[3]+1
+				name = s.values('name')[0]['name']	
+				stations_data[name] = result
+
+		return render_to_response('ev.html',locals())
+    	else:
+        	form = GetEvForm() # An unbound form
+
+    	return render(request, 'ev.html', {
+        	'form': form,
+    	})
+
 	
 	stations_list = Station.objects.all()
 	return render_to_response('ev.html',locals())
