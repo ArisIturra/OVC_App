@@ -99,8 +99,8 @@ def get3DPie(result):
 
 @csrf_exempt
 def ev(request):
-#	if not request.user.is_authenticated():
-#                return HttpResponseRedirect('/admin')
+	if not request.user.is_authenticated():
+		return HttpResponseRedirect('/admin')
 	from django.shortcuts import render	
 	if request.method == 'POST': # If the form has been submitted...
 		form = GetEvForm(request.POST) # A form bound to the POST data
