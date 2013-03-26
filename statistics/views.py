@@ -132,7 +132,6 @@ def ev(request):
 					result[4].append(e)
 				name = s.values('name')[0]['name']	
 				stations_data[name] = result
-
 		return render_to_response('ev.html',locals())
     	else:
         	form = GetEvForm() # An unbound form
