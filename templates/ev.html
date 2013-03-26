@@ -42,7 +42,12 @@ display:inline-block;
 width:60px;
 }
 
-
+.mystyle1 {
+                background-color: #FFFFFF;
+                color: #3366CC;
+                font: 13px Verdana;
+                font-weight: bold;    
+                text-align: center; }
 </style>
 {{ form.media }}
 
@@ -66,6 +71,7 @@ width:60px;
       		google.load("visualization", "1", {packages:["corechart","table"]});
       		google.setOnLoadCallback(drawChart);
       		google.setOnLoadCallback(drawTable);
+      		google.setOnLoadCallback(drawTableDetails);
       		function drawChart() {
         		var data = google.visualization.arrayToDataTable([
 				['Task', 'Hours per Day'],
@@ -113,20 +119,56 @@ width:60px;
 
 		var table = new google.visualization.Table(
 			document.getElementById("table_div{{ forloop.counter}}"));
-
 		table.draw(datat, {showRowNumber: false});
-
+		google.visualization.events.addListener(table, 'select', function() {
+		    	var row = table.getSelection()[0].row;
+				var e = document.getElementById("tabled_div{{ forloop.counter}}");
+				if(e.style.display == 'none')
+				{
+					e.style.display = 'block';
+				}
+				else 
+				{
+					e.style.display = 'none';
+				}
+  			});
 		}
-		
+		function drawTableDetails(){
+
+                        var datat = new google.visualization.DataTable();
+                        datat.addColumn('number', 'Hour');
+                        datat.addColumn('string', 'Date');
+                        datat.addColumn('string', 'Evaluation');
+                        datat.addRows({{item.1.4|length}});
+
+		{% for ev in item.1.4 %}
+			datat.setCell({{forloop.counter|add:"-1" }},0,{{ ev.hour }});
+			datat.setCell({{forloop.counter|add:"-1" }},1,'{{ ev.date}}');
+			datat.setCell({{forloop.counter|add:"-1" }},2,'{{ ev.choice }}');
+		{% endfor %}
+
+
+
+                var tabledetails = new google.visualization.Table(
+                        document.getElementById("tabled_div{{ forloop.counter}}"));
+                tabledetails.draw(datat, {showRowNumber: false});
+			document.getElementById("tabled_div{{ forloop.counter}}").style.display = 'none';
+
+                }
 		
 	</script>
-
 	<table border=2>
 		<tr>
 			<td>
 				<div id="table_div{{ forloop.counter}}"></div>  
 			      	<div id="chart_div{{ forloop.counter}}" style="width: 400px; height: 400px;"></div> 
 			 </td>
+			<td> 
+				<div id="tabled_div{{ forloop.counter}}" style="align: center;"></div>  
+			</td>
+	
+
+
 		</tr>
 	<table>
 	{%endfor%}

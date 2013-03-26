@@ -119,7 +119,7 @@ def ev(request):
 					date__range=[sdate,edate],
 					station=s
 					)
-				result = [0,0,0,0]
+				result = [0,0,0,0,[]]
 				for e in evs:
 					if e.choice.weight == 100:
 						result[0]=result[0]+1
@@ -129,6 +129,7 @@ def ev(request):
 						result[2]=result[2]+1
 					if e.choice.weight == 0:
 						result[3]=result[3]+1
+					result[4].append(e)
 				name = s.values('name')[0]['name']	
 				stations_data[name] = result
 
