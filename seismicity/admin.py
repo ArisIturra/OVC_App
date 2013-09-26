@@ -129,7 +129,9 @@ class SeismAdmin(admin.ModelAdmin):
 		except IOError:
 			pass
 	def export_to_gmt_region(self,request,q):
-		
+	
+
+	
 		filename = 'region.ps'
 		title = 'XI Regi\\363n'
 		cota = '750'
