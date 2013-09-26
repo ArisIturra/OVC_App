@@ -63,7 +63,8 @@ class SeismAdmin(admin.ModelAdmin):
 
 	actions = [	'export_to_kml',
 			'export_to_gmt_script',
-			'export_to_3D_plot'
+			'export_to_3D_plot',
+			'export_to_gmt_region',
 			]
 
 		
@@ -127,8 +128,86 @@ class SeismAdmin(admin.ModelAdmin):
 		        	f.close()
 		except IOError:
 			pass
+	def export_to_gmt_region(self,request,q):
+		
+		filename = 'region.ps'
+		title = 'XI Regi\\363n'
+		cota = '750'
+		grid='/opt/gmt/grid.grd'
+		border='-74.1890/-71.4070/-46.5465/-41.9463'
+		borderp='-74.1890/-71.4070'
+		
+
+		locale=[]
+                for seism in q:
+                        if seism.located and seism.deep:
+                                locale.append((seism.longitude, seism.latitude))
+		
+		try:
+			try:
+				f = open('tmp/region.sh', 'wr')
+                                f.write('#!/sbin/sh\n')
+				
+				f.write('ps=%s\n'%filename)
+                                f.write('cota=%s\n'%cota)
+                                f.write('grid=%s\n'%grid)
+				f.write('border=%s\n'%border)
+				f.write('borderp=%s\n'%borderp)
+	
+	                        f.write('gmtset GRID_PEN_PRIMARY thinnest,-\n')
+                                f.write('makecpt -Cseis -T0/50/10 > deep.cpt\n')
+                                f.write('makecpt -Ctopo -T0/2000/$cota > g.cpt\n')
+			
+				f.write('grdimage $grid -R$border \\\n')
+				f.write('-JM3.5i -E100 \\\n')
+				f.write('-B0.5g0.5:."%s:" -Cg.cpt \\\n'%title)
+				f.write('-Y2.6i \\\n')
+				f.write('-P -K > $ps\n')
+
+				f.write('grdcontour $grid -R$border \\\n')
+				f.write('-JM3.5i -C$cota  -P -K  -O >> $ps \n')	
+				f.write('psxy -R -J -O -Cdeep.cpt  -Sci -Wthinnest -K << END >> $ps\n')
+				                
+		                for seism in q:
+                                        if seism.located and seism.deep:
+                                                f.write('%s %s %s %s \n'%(
+                                                        seism.longitude,
+                                                        seism.latitude,
+                                                        seism.deep,
+                                                        '0.1',#MAGNITUDE
+                                                        ))
+                                f.write('END\n')
+
+				f.write('psxy -R$borderp/-50/2 \\\n')
+				f.write('-JX3.5i/1.4i  -Wthick  -X0i -Y-1.8i -Cdeep.cpt  -Sc0.1i \\\n')
+				f.write('-B0.5g0.5:"Longitud":/10g10:"Km":WS -O -K << END >> $ps \n')
+
+		                for seism in q:
+                                	if seism.located and seism.deep:
+                                        	f.write('%s %s %s %s \n'%(
+                                                        seism.longitude,
+                                                        seism.deep *-1,
+                                                        seism.deep,
+                                                        seism.deep,
+                                                        ))
+                                f.write('END\n')
 
 
+				f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y3.3i \\\n')
+				f.write('-O -K -I0.3 -Ac -B500::/:m.s.n.m.:  >> $ps \n')
+				f.write('ps2pdf $ps \n')
+				f.write('rm $ps deep.cpt g.cpt .gmtcommands4 .gmtdefaults4 -f \n')
+
+			finally:
+                                f.close()
+                except IOError:
+                        pass
+
+		f=open('tmp/region.sh', 'r')
+                response = HttpResponse(f.read(),mimetype='application/x-sh')
+                response['Content-Disposition'] = 'filename=region.sh'
+                return response
+		
 	def export_to_gmt_script(self,request,q):
 
 		
@@ -177,7 +256,6 @@ class SeismAdmin(admin.ModelAdmin):
 					contourn[1][0],contourn[1][1]
 					))	
 				f.write('-JM5i -C$cota  -P -K  -O >> $ps \n')
-#escala				f.write('psbasemap -R -J -O -K -Lf72:45:00W/46:08:00S/-45N/20k+u  >> $ps \n')
 				
 				f.write('psxy -R -J -O -Cdeep.cpt  -Sci -Wthinnest -K << END >> $ps \n')
 			
