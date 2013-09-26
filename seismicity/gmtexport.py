@@ -1,4 +1,5 @@
 #TODO: POO plz use Ur brain!!!!!
+#Did you hear about encapsulation?
 
 from django.http import HttpResponse
 class gmtExport():
@@ -69,7 +70,7 @@ class gmtExport():
 
 
                       	 	f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y3.3i \\\n')
-                        	f.write('-O -K -I0.3 -Ac -B500::/:m.s.n.m.:  >> $ps \n')
+                        	f.write('-O -K -I0.3 -Ac -B500::/:ms.n.m.:  >> $ps \n')
                         	f.write('ps2pdf $ps \n')
                         	f.write('rm $ps deep.cpt g.cpt .gmtcommands4 .gmtdefaults4 -f \n')
 
@@ -151,7 +152,7 @@ class gmtExport():
 
 
                       	 	f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y1.3i \\\n')
-                        	f.write('-O -K -I0.3 -Ac -B500::/:m.s.n.m.:  >> $ps \n')
+                        	f.write('-O -K -I0.3 -Ac -B500::/:ms.n.m.:  >> $ps \n')
                         	f.write('ps2pdf $ps \n')
                         	f.write('rm $ps deep.cpt g.cpt .gmtcommands4 .gmtdefaults4 -f \n')
 
@@ -234,7 +235,7 @@ class gmtExport():
 
 
                       	 	f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y1.3i \\\n')
-                        	f.write('-O -K -I0.3 -Ac -B500::/:m.s.n.m.:  >> $ps \n')
+                        	f.write('-O -K -I0.3 -Ac -B500::/:ms.n.m.:  >> $ps \n')
                         	f.write('ps2pdf $ps \n')
                         	f.write('rm $ps deep.cpt g.cpt .gmtcommands4 .gmtdefaults4 -f \n')
 
@@ -315,7 +316,7 @@ class gmtExport():
 
 
                       	 	f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y1.3i \\\n')
-                        	f.write('-O -K -I0.3 -Ac -B500::/:m.s.n.m.:  >> $ps \n')
+                        	f.write('-O -K -I0.3 -Ac -B500::/:ms.n.m.:  >> $ps \n')
                         	f.write('ps2pdf $ps \n')
                         	f.write('rm $ps deep.cpt g.cpt .gmtcommands4 .gmtdefaults4 -f \n')
 
@@ -395,7 +396,7 @@ class gmtExport():
 
 
                       	 	f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y1.3i \\\n')
-                        	f.write('-O -K -I0.3 -Ac -B500::/:m.s.n.m.:  >> $ps \n')
+                        	f.write('-O -K -I0.3 -Ac -B500::/:ms.n.m.:  >> $ps \n')
                         	f.write('ps2pdf $ps \n')
                         	f.write('rm $ps deep.cpt g.cpt .gmtcommands4 .gmtdefaults4 -f \n')
 
@@ -475,7 +476,7 @@ class gmtExport():
 
 
                       	 	f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y1.3i \\\n')
-                        	f.write('-O -K -I0.3 -Ac -B500::/:m.s.n.m.:  >> $ps \n')
+                        	f.write('-O -K -I0.3 -Ac -B500::/:ms.n.m.:  >> $ps \n')
                         	f.write('ps2pdf $ps \n')
                         	f.write('rm $ps deep.cpt g.cpt .gmtcommands4 .gmtdefaults4 -f \n')
 
@@ -555,7 +556,7 @@ class gmtExport():
 
 
                       	 	f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y1.3i \\\n')
-                        	f.write('-O -K -I0.3 -Ac -B500::/:m.s.n.m.:  >> $ps \n')
+                        	f.write('-O -K -I0.3 -Ac -B500::/:ms.n.m.:  >> $ps \n')
                         	f.write('ps2pdf $ps \n')
                         	f.write('rm $ps deep.cpt g.cpt .gmtcommands4 .gmtdefaults4 -f \n')
 
@@ -635,7 +636,7 @@ class gmtExport():
 
 
                       	 	f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y1.3i \\\n')
-                        	f.write('-O -K -I0.3 -Ac -B500::/:m.s.n.m.:  >> $ps \n')
+                        	f.write('-O -K -I0.3 -Ac -B500::/:ms.n.m.:  >> $ps \n')
                         	f.write('ps2pdf $ps \n')
                         	f.write('rm $ps deep.cpt g.cpt .gmtcommands4 .gmtdefaults4 -f \n')
 
@@ -717,7 +718,7 @@ class gmtExport():
 
 
                       	 	f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y1.3i \\\n')
-                        	f.write('-O -K -I0.3 -Ac -B500::/:m.s.n.m.:  >> $ps \n')
+                        	f.write('-O -K -I0.3 -Ac -B500::/:ms.n.m.:  >> $ps \n')
                         	f.write('ps2pdf $ps \n')
                         	f.write('rm $ps deep.cpt g.cpt .gmtcommands4 .gmtdefaults4 -f \n')
 

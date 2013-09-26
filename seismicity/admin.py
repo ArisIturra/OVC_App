@@ -66,7 +66,7 @@ class SeismAdmin(admin.ModelAdmin):
 			'export_to_gmt_corcovado',
 			'export_to_gmt_fiordo',
 			'export_to_gmt_hudson',
-			'export_to_gmt_macaCay',
+			'export_to_gmt_macacay',
 			'export_to_gmt_melimoyu',
 			'export_to_gmt_mentolat',
 			'export_to_gmt_michimahuida',
