@@ -791,3 +791,91 @@ class gmtExport():
        		response['Content-Disposition'] = 'filename=yanteles.sh'
         	return response
 
+
+	def arenales(self,q):
+		filename = 'arenales.ps'
+	       	title = 'Arenales'
+	        cota = '500'
+	        grid='/opt/gmt/grid.grd'
+	        border='-78.330146/-70.885753/-47.964667/-45.064280'
+	        borderp='-78.330146/-70.885753'
+
+
+	        locale=[]
+       		for seism in q:
+        		if seism.located and seism.deep:
+                		locale.append((seism.longitude, seism.latitude))
+
+		try:
+	        	try:
+	                	f = open('tmp/arenales.sh', 'wr')
+	                        f.write('#!/sbin/sh\n')
+
+	                        f.write('ps=%s\n'%filename)
+       	   			f.write('cota=%s\n'%cota)
+          	              	f.write('grid=%s\n'%grid)
+          	              	f.write('border=%s\n'%border)
+                	        f.write('borderp=%s\n'%borderp)
+
+                       	 	f.write('gmtset GRID_PEN_PRIMARY thinnest,-\n')
+                        	f.write('makecpt -Cseis -T0/50/10 > deep.cpt\n')
+                        	f.write('makecpt -Ctopo -T0/2000/$cota > g.cpt\n')
+
+                        	f.write('grdimage $grid -R$border \\\n')
+                        	f.write('-JM5i -E100 \\\n')
+                        	f.write('-B1.0g1.0:."%s:" -Cg.cpt \\\n'%title)
+                        	f.write('-X1i -Y7i \\\n')
+                        	f.write('-P -K > $ps\n')
+				f.write('psbasemap -R -J -O -K -Lf77:00:00W/47:40:00S/-45N/100k+u  >> $ps\n')
+
+                        	f.write('grdcontour $grid -R$border \\\n')
+                        	f.write('-JM5i -C$cota  -P -K  -O >> $ps \n')
+                        	f.write('psxy -R -J -O -Cdeep.cpt  -Sci -Wthinnest -K << END >> $ps\n')
+
+                        	for seism in q:
+                        		if seism.located and seism.deep:
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                             			if seism.latitude < float(border.split('/')[3]):
+			                                		f.write('%s %s %s %s \n'%(
+                        			                		seism.longitude,
+                                                				seism.latitude,
+                                                				seism.deep,
+                                                				'0.1',#MAGNITUDE
+                                                			))       
+	            		f.write('END\n')
+
+
+				f.write('psxy -R$borderp/-30/2 \\\n')
+                        	f.write('-JX5i/1.4i  -Wthick  -X0i -Y-2.0i -Cdeep.cpt  -Sc0.1i \\\n')
+                        	f.write('-B0.5g0.5:"Longitud":/10g10:"Km":WS -O -K << END >> $ps \n')
+
+                        	for seism in q:
+                        		if seism.located and seism.deep:
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                                                if seism.latitude < float(border.split('/')[3]):
+		                	                		f.write('%s %s %s %s \n'%(
+                			                        		seism.longitude,
+                                        			        	seism.deep *-1,
+                                               	 				seism.deep,
+                                                				seism.deep,
+                                                			))
+                    		f.write('END\n')
+
+
+                      	 	f.write('psscale -Cg.cpt -D5.9i/2.5i/3i/0.35i -Y1.3i \\\n')
+                        	f.write('-O -K -I0.3 -Ac -B500::/:ms.n.m.:  >> $ps \n')
+                        	f.write('ps2pdf $ps \n')
+                        	f.write('rm $ps deep.cpt g.cpt .gmtcommands4 .gmtdefaults4 -f \n')
+
+             	 	finally:
+                		f.close()
+		except IOError:
+        		pass
+
+		f=open('tmp/arenales.sh', 'r')
+        	response = HttpResponse(f.read(),mimetype='application/x-sh')
+       		response['Content-Disposition'] = 'filename=arenales.sh'
+        	return response
+

@@ -63,6 +63,7 @@ class SeismAdmin(admin.ModelAdmin):
 
 	actions = [	'export_to_kml',
 			'export_to_gmt_region',
+			'export_to_gmt_arenales',
 			'export_to_gmt_corcovado',
 			'export_to_gmt_fiordo',
 			'export_to_gmt_hudson',
