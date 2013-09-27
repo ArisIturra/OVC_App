@@ -13,11 +13,6 @@ class gmtExport():
 	        borderp='-74.1890/-71.4070'
 
 
-	        locale=[]
-       		for seism in q:
-        		if seism.located and seism.deep:
-                		locale.append((seism.longitude, seism.latitude))
-
 		try:
 	        	try:
 	                	f = open('tmp/region.sh', 'wr')
@@ -39,33 +34,42 @@ class gmtExport():
                         	f.write('-Y2.6i \\\n')
                         	f.write('-P -K > $ps\n')
 
+				f.write('psbasemap -R -J -O -K -Lf72:20:00W/46:20:00S/-45N/100k+u  >> $ps\n')
+
+
                         	f.write('grdcontour $grid -R$border \\\n')
                         	f.write('-JM3.5i -C$cota  -P -K  -O >> $ps \n')
                         	f.write('psxy -R -J -O -Cdeep.cpt  -Sci -Wthinnest -K << END >> $ps\n')
 
                        		for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.latitude,
-                                                	seism.deep,
-                                                	'0.1',#MAGNITUDE
-                                                	))
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                             			if seism.latitude < float(border.split('/')[3]):
+			                                		f.write('%s %s %s %s \n'%(
+                        			                		seism.longitude,
+                                                				seism.latitude,
+                                                				seism.deep,
+                                                				'0.1',#MAGNITUDE
+                                                			))
                    		f.write('END\n')
 
 
-				f.write('psxy -R$borderp/-50/2 \\\n')
+				f.write('psxy -R$borderp/-30/2 \\\n')
                         	f.write('-JX3.5i/1.4i  -Wthick  -X0i -Y-1.8i -Cdeep.cpt  -Sc0.1i \\\n')
                         	f.write('-B0.5g0.5:"Longitud":/10g10:"Km":WS -O -K << END >> $ps \n')
 
                         	for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.deep *-1,
-                                               	 	seism.deep,
-                                                	seism.deep,
-                                                	))
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                                                if seism.latitude < float(border.split('/')[3]):
+		                	                		f.write('%s %s %s %s \n'%(
+                			                        		seism.longitude,
+                                        			        	seism.deep *-1,
+                                               	 				seism.deep,
+                                                				seism.deep,
+                                                			))
                     		f.write('END\n')
 
 
@@ -120,34 +124,41 @@ class gmtExport():
                         	f.write('-B0.5g0.5:."%s:" -Cg.cpt \\\n'%title)
                         	f.write('-X1i -Y7i \\\n')
                         	f.write('-P -K > $ps\n')
+				
+				f.write('psbasemap -R -J -O -K -Lf73:30:00W/43:32:00S/-45N/40k+u  >> $ps\n')
 
                         	f.write('grdcontour $grid -R$border \\\n')
                         	f.write('-JM5i -C$cota  -P -K  -O >> $ps \n')
                         	f.write('psxy -R -J -O -Cdeep.cpt  -Sci -Wthinnest -K << END >> $ps\n')
-
                        		for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.latitude,
-                                                	seism.deep,
-                                                	'0.1',#MAGNITUDE
-                                                	))
-                   		f.write('END\n')
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                             			if seism.latitude < float(border.split('/')[3]):
+			                                		f.write('%s %s %s %s \n'%(
+                        			                		seism.longitude,
+                                                				seism.latitude,
+                                                				seism.deep,
+                                                				'0.1',#MAGNITUDE
+                                                			))
+                		f.write('END\n')
 
 
-				f.write('psxy -R$borderp/-50/2 \\\n')
+				f.write('psxy -R$borderp/-30/2 \\\n')
                         	f.write('-JX5i/1.4i  -Wthick  -X0i -Y-1.8i -Cdeep.cpt  -Sc0.1i \\\n')
                         	f.write('-B0.5g0.5:"Longitud":/10g10:"Km":WS -O -K << END >> $ps \n')
 
                         	for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.deep *-1,
-                                               	 	seism.deep,
-                                                	seism.deep,
-                                                	))
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                                                if seism.latitude < float(border.split('/')[3]):
+		                	                		f.write('%s %s %s %s \n'%(
+                			                        		seism.longitude,
+                                        			        	seism.deep *-1,
+                                               	 				seism.deep,
+                                                				seism.deep,
+                                                			))
                     		f.write('END\n')
 
 
@@ -204,33 +215,41 @@ class gmtExport():
                         	f.write('-X1i -Y7i \\\n')
                         	f.write('-P -K > $ps\n')
 
-                        	f.write('grdcontour $grid -R$border \\\n')
+				f.write('psbasemap -R -J -O -K -Lf72:30:00W/45:38:00S/-45N/40k+u  >> $ps\n')
+                        	
+				f.write('grdcontour $grid -R$border \\\n')
                         	f.write('-JM5i -C$cota  -P -K  -O >> $ps \n')
                         	f.write('psxy -R -J -O -Cdeep.cpt  -Sci -Wthinnest -K << END >> $ps\n')
 
                        		for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.latitude,
-                                                	seism.deep,
-                                                	'0.1',#MAGNITUDE
-                                                	))
-                   		f.write('END\n')
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                             			if seism.latitude < float(border.split('/')[3]):
+			                                		f.write('%s %s %s %s \n'%(
+                        			                		seism.longitude,
+                                                				seism.latitude,
+                                                				seism.deep,
+                                                				'0.1',#MAGNITUDE
+                                                			))
+				f.write('END\n')
 
 
-				f.write('psxy -R$borderp/-50/2 \\\n')
+				f.write('psxy -R$borderp/-30/2 \\\n')
                         	f.write('-JX5i/1.4i  -Wthick  -X0i -Y-2.0i -Cdeep.cpt  -Sc0.1i \\\n')
                         	f.write('-B0.5g0.5:"Longitud":/10g10:"Km":WS -O -K << END >> $ps \n')
 
                         	for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.deep *-1,
-                                               	 	seism.deep,
-                                                	seism.deep,
-                                                	))
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                                                if seism.latitude < float(border.split('/')[3]):
+		                	                		f.write('%s %s %s %s \n'%(
+                			                        		seism.longitude,
+                                        			        	seism.deep *-1,
+                                               	 				seism.deep,
+                                                				seism.deep,
+                                                			))
                     		f.write('END\n')
 
 
@@ -252,7 +271,7 @@ class gmtExport():
 
 	def hudson(self,q):
 		filename = 'hudson.ps'
-	       	title = 'hudson'
+	       	title = 'Hudson'
 	        cota = '250'
 	        grid='/opt/gmt/grid.grd'
 	        border='-73.715979/-72.267919/-46.210272/-45.613496'
@@ -285,33 +304,40 @@ class gmtExport():
                         	f.write('-X1i -Y7i \\\n')
                         	f.write('-P -K > $ps\n')
 
+				f.write('psbasemap -R -J -O -K -Lf72:40:00W/46:08:00S/-45N/40k+u  >> $ps\n')
                         	f.write('grdcontour $grid -R$border \\\n')
                         	f.write('-JM5i -C$cota  -P -K  -O >> $ps \n')
                         	f.write('psxy -R -J -O -Cdeep.cpt  -Sci -Wthinnest -K << END >> $ps\n')
 
                        		for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.latitude,
-                                                	seism.deep,
-                                                	'0.1',#MAGNITUDE
-                                                	))
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                             			if seism.latitude < float(border.split('/')[3]):
+			                                		f.write('%s %s %s %s \n'%(
+                        			                		seism.longitude,
+                                                				seism.latitude,
+                                                				seism.deep,
+                                                				'0.1',#MAGNITUDE
+                                                			))
                    		f.write('END\n')
 
 
-				f.write('psxy -R$borderp/-50/2 \\\n')
+				f.write('psxy -R$borderp/-30/2 \\\n')
                         	f.write('-JX5i/1.4i  -Wthick  -X0i -Y-2.0i -Cdeep.cpt  -Sc0.1i \\\n')
                         	f.write('-B0.5g0.5:"Longitud":/10g10:"Km":WS -O -K << END >> $ps \n')
 
                         	for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.deep *-1,
-                                               	 	seism.deep,
-                                                	seism.deep,
-                                                	))
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                                                if seism.latitude < float(border.split('/')[3]):
+		                	                		f.write('%s %s %s %s \n'%(
+                			                        		seism.longitude,
+                                        			        	seism.deep *-1,
+                                               	 				seism.deep,
+                                                				seism.deep,
+                                                			))
                     		f.write('END\n')
 
 
@@ -365,33 +391,40 @@ class gmtExport():
                         	f.write('-X1i -Y7i \\\n')
                         	f.write('-P -K > $ps\n')
 
+				f.write('psbasemap -R -J -O -K -Lf73:25:00W/45:20:00S/-45N/40k+u  >> $ps\n')
                         	f.write('grdcontour $grid -R$border \\\n')
                         	f.write('-JM5i -C$cota  -P -K  -O >> $ps \n')
                         	f.write('psxy -R -J -O -Cdeep.cpt  -Sci -Wthinnest -K << END >> $ps\n')
 
-                       		for seism in q:
+                         	for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.latitude,
-                                                	seism.deep,
-                                                	'0.1',#MAGNITUDE
-                                                	))
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                             			if seism.latitude < float(border.split('/')[3]):
+			                                		f.write('%s %s %s %s \n'%(
+                        			                		seism.longitude,
+                                                				seism.latitude,
+                                                				seism.deep,
+                                                				'0.1',#MAGNITUDE
+                                                			))
                    		f.write('END\n')
 
 
-				f.write('psxy -R$borderp/-50/2 \\\n')
+				f.write('psxy -R$borderp/-30/2 \\\n')
                         	f.write('-JX5i/1.4i  -Wthick  -X0i -Y-2.0i -Cdeep.cpt  -Sc0.1i \\\n')
                         	f.write('-B0.5g0.5:"Longitud":/10g10:"Km":WS -O -K << END >> $ps \n')
 
                         	for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.deep *-1,
-                                               	 	seism.deep,
-                                                	seism.deep,
-                                                	))
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                                                if seism.latitude < float(border.split('/')[3]):
+		                	                		f.write('%s %s %s %s \n'%(
+                			                        		seism.longitude,
+                                        			        	seism.deep *-1,
+                                               	 				seism.deep,
+                                                				seism.deep,
+                                                			))
                     		f.write('END\n')
 
 
@@ -444,6 +477,7 @@ class gmtExport():
                         	f.write('-B0.5g0.5:."%s:" -Cg.cpt \\\n'%title)
                         	f.write('-X1i -Y7i \\\n')
                         	f.write('-P -K > $ps\n')
+				f.write('psbasemap -R -J -O -K -Lf72:30:00W/44:28:00S/-45N/40k+u  >> $ps\n')
 
                         	f.write('grdcontour $grid -R$border \\\n')
                         	f.write('-JM5i -C$cota  -P -K  -O >> $ps \n')
@@ -451,27 +485,33 @@ class gmtExport():
 
                        		for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.latitude,
-                                                	seism.deep,
-                                                	'0.1',#MAGNITUDE
-                                                	))
-                   		f.write('END\n')
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                             			if seism.latitude < float(border.split('/')[3]):
+			                                		f.write('%s %s %s %s \n'%(
+                        			                		seism.longitude,
+                                                				seism.latitude,
+                                                				seism.deep,
+                                                				'0.1',#MAGNITUDE
+                                                			))
+                 		f.write('END\n')
 
 
-				f.write('psxy -R$borderp/-50/2 \\\n')
+				f.write('psxy -R$borderp/-30/2 \\\n')
                         	f.write('-JX5i/1.4i  -Wthick  -X0i -Y-2.0i -Cdeep.cpt  -Sc0.1i \\\n')
                         	f.write('-B0.5g0.5:"Longitud":/10g10:"Km":WS -O -K << END >> $ps \n')
 
                         	for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.deep *-1,
-                                               	 	seism.deep,
-                                                	seism.deep,
-                                                	))
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                                                if seism.latitude < float(border.split('/')[3]):
+		                	                		f.write('%s %s %s %s \n'%(
+                			                        		seism.longitude,
+                                        			        	seism.deep *-1,
+                                               	 				seism.deep,
+                                                				seism.deep,
+                                                			))
                     		f.write('END\n')
 
 
@@ -524,34 +564,40 @@ class gmtExport():
                         	f.write('-B0.5g0.5:."%s:" -Cg.cpt \\\n'%title)
                         	f.write('-X1i -Y7i \\\n')
                         	f.write('-P -K > $ps\n')
+				f.write('psbasemap -R -J -O -K -Lf72:45:00W/44:59:00S/-45N/40k+u  >> $ps\n')
 
                         	f.write('grdcontour $grid -R$border \\\n')
                         	f.write('-JM5i -C$cota  -P -K  -O >> $ps \n')
                         	f.write('psxy -R -J -O -Cdeep.cpt  -Sci -Wthinnest -K << END >> $ps\n')
-
                        		for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.latitude,
-                                                	seism.deep,
-                                                	'0.1',#MAGNITUDE
-                                                	))
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                             			if seism.latitude < float(border.split('/')[3]):
+			                                		f.write('%s %s %s %s \n'%(
+                        			                		seism.longitude,
+                                                				seism.latitude,
+                                                				seism.deep,
+                                                				'0.1',#MAGNITUDE
+                                                			))
                    		f.write('END\n')
 
 
-				f.write('psxy -R$borderp/-50/2 \\\n')
+				f.write('psxy -R$borderp/-30/2 \\\n')
                         	f.write('-JX5i/1.4i  -Wthick  -X0i -Y-2.0i -Cdeep.cpt  -Sc0.1i \\\n')
                         	f.write('-B0.5g0.5:"Longitud":/10g10:"Km":WS -O -K << END >> $ps \n')
 
                         	for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.deep *-1,
-                                               	 	seism.deep,
-                                                	seism.deep,
-                                                	))
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                                                if seism.latitude < float(border.split('/')[3]):
+		                	                		f.write('%s %s %s %s \n'%(
+                			                        		seism.longitude,
+                                        			        	seism.deep *-1,
+                                               	 				seism.deep,
+                                                				seism.deep,
+                                                			))
                     		f.write('END\n')
 
 
@@ -604,34 +650,40 @@ class gmtExport():
                         	f.write('-B0.5g0.5:."%s:" -Cg.cpt \\\n'%title)
                         	f.write('-X1i -Y7i \\\n')
                         	f.write('-P -K > $ps\n')
+				f.write('psbasemap -R -J -O -K -Lf73:00:00W/43:10:00S/-45N/40k+u  >> $ps\n')
 
                         	f.write('grdcontour $grid -R$border \\\n')
                         	f.write('-JM5i -C$cota  -P -K  -O >> $ps \n')
                         	f.write('psxy -R -J -O -Cdeep.cpt  -Sci -Wthinnest -K << END >> $ps\n')
-
                        		for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.latitude,
-                                                	seism.deep,
-                                                	'0.1',#MAGNITUDE
-                                                	))
-                   		f.write('END\n')
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                             			if seism.latitude < float(border.split('/')[3]):
+			                                		f.write('%s %s %s %s \n'%(
+                        			                		seism.longitude,
+                                                				seism.latitude,
+                                                				seism.deep,
+                                                				'0.1',#MAGNITUDE
+                                                			))
+                		f.write('END\n')
 
 
-				f.write('psxy -R$borderp/-50/2 \\\n')
+				f.write('psxy -R$borderp/-30/2 \\\n')
                         	f.write('-JX5i/1.4i  -Wthick  -X0i -Y-2.0i -Cdeep.cpt  -Sc0.1i \\\n')
                         	f.write('-B0.5g0.5:"Longitud":/10g10:"Km":WS -O -K << END >> $ps \n')
 
                         	for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.deep *-1,
-                                               	 	seism.deep,
-                                                	seism.deep,
-                                                	))
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                                                if seism.latitude < float(border.split('/')[3]):
+		                	                		f.write('%s %s %s %s \n'%(
+                			                        		seism.longitude,
+                                        			        	seism.deep *-1,
+                                               	 				seism.deep,
+                                                				seism.deep,
+                                                			))
                     		f.write('END\n')
 
 
@@ -686,34 +738,41 @@ class gmtExport():
                         	f.write('-B0.5g0.5:."%s:" -Cg.cpt \\\n'%title)
                         	f.write('-X1i -Y7i \\\n')
                         	f.write('-P -K > $ps\n')
+				f.write('psbasemap -R -J -O -K -Lf73:30:00W/43:50:00S/-45N/40k+u  >> $ps\n')
 
                         	f.write('grdcontour $grid -R$border \\\n')
                         	f.write('-JM5i -C$cota  -P -K  -O >> $ps \n')
                         	f.write('psxy -R -J -O -Cdeep.cpt  -Sci -Wthinnest -K << END >> $ps\n')
 
-                       		for seism in q:
+                        	for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.latitude,
-                                                	seism.deep,
-                                                	'0.1',#MAGNITUDE
-                                                	))
-                   		f.write('END\n')
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                             			if seism.latitude < float(border.split('/')[3]):
+			                                		f.write('%s %s %s %s \n'%(
+                        			                		seism.longitude,
+                                                				seism.latitude,
+                                                				seism.deep,
+                                                				'0.1',#MAGNITUDE
+                                                			))       
+	            		f.write('END\n')
 
 
-				f.write('psxy -R$borderp/-50/2 \\\n')
+				f.write('psxy -R$borderp/-30/2 \\\n')
                         	f.write('-JX5i/1.4i  -Wthick  -X0i -Y-2.0i -Cdeep.cpt  -Sc0.1i \\\n')
                         	f.write('-B0.5g0.5:"Longitud":/10g10:"Km":WS -O -K << END >> $ps \n')
 
                         	for seism in q:
                         		if seism.located and seism.deep:
-                                		f.write('%s %s %s %s \n'%(
-                                        		seism.longitude,
-                                                	seism.deep *-1,
-                                               	 	seism.deep,
-                                                	seism.deep,
-                                                	))
+						if seism.deep < 30:
+							if seism.latitude > float(border.split('/')[2]):
+                                                                if seism.latitude < float(border.split('/')[3]):
+		                	                		f.write('%s %s %s %s \n'%(
+                			                        		seism.longitude,
+                                        			        	seism.deep *-1,
+                                               	 				seism.deep,
+                                                				seism.deep,
+                                                			))
                     		f.write('END\n')
 
 
