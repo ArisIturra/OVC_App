@@ -264,7 +264,61 @@ if(e.id == 'chart_div3')
 				</tr>
 
 				<tr>
-					<td><iframe src="http://cam.ovc.sernageomin.cl/hudson" frameborder="0" height="450" width="500" > </iframe></td>
+					<td>
+
+
+
+
+<SCRIPT LANGUAGE="JavaScript">
+
+	var BaseURL = "http://190.13.135.70/";
+
+
+
+	var DisplayWidth = "450";
+
+	var DisplayHeight = "500";
+
+
+
+	var File = "Imagen.jpg?resolution=640x480&clock=1&date=1";
+
+	var theTimer = setTimeout('reloadImage()', 1);
+
+
+
+	function reloadImage()
+
+	{
+
+  	theDate = new Date();
+
+  	var url = BaseURL;
+
+  	url += File;
+
+  	url += '&dummy=' + theDate.getTime().toString(10);
+
+
+
+  	document.theImage.src = url;
+
+
+
+	theTimer = setTimeout('reloadImage()', 3000);
+
+	}
+
+	document.write('<img name="theImage" src="" height="' + DisplayHeight + '"');
+
+	document.write('width="' + DisplayWidth + '" alt="Live image">');
+
+</SCRIPT>
+
+<iframe src="http://190.13.145.70" frameborder="0" height="450" width="500" > </iframe>
+
+
+</td>
 				</tr>
 
 			</table>
