@@ -90,6 +90,8 @@ class Seism(models.Model):
 	
 	checked = models.BooleanField()
 	
+#	def getSeism(self,'event_date','p_hh','p_mm','p_ss','p_ms'):
+#		return self
 
 	def __unicode__(self):
 		return str('%s.%.2d%.2d %s'%(self.event_date.strftime('%Y%m%d'),

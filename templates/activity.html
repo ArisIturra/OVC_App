@@ -59,7 +59,7 @@ width:60px;
 
 	<script type='text/javascript'>
 			google.load('visualization', '1',
-         		 	{'packages': ['table', 'map', 'corechart','imagechart']});
+         		 	{'packages': ['table', 'map', 'corechart','imagechart','geochart']});
 			      	google.setOnLoadCallback(initialize);
 
 			function initialize() {
@@ -90,7 +90,9 @@ width:60px;
 
 			{% for quake in quakes %}
 				data.setCell({{forloop.counter|add:"-1" }}, 0,'{{quake.event_date}}');
-				data.setCell({{forloop.counter|add:"-1" }}, 1,'{{quake.p_hh}}:{{quake.p_mm}}:{{quake.p_ss}}');
+				data.setCell({{forloop.counter|add:"-1" }}, 1,'{{quake.p_hh|stringformat:"02d"}}:{{quake.p_mm|stringformat:"02d" }}:{{quake.p_ss|stringformat:"02d"}}.{{quake.p_ms|stringformat:"02d"}}');
+
+
 				data.setCell({{forloop.counter|add:"-1" }}, 2,'{{quake.arrival_station}}');
 				data.setCell({{forloop.counter|add:"-1" }}, 3,'{{quake.location}}');
 				data.setCell({{forloop.counter|add:"-1" }}, 4,'{{quake.local_magnitude}}');
@@ -113,7 +115,18 @@ width:60px;
                 			gData.setCell({{ forloop.counter|add:"-1" }},3,'{{ quake.deep }}');
         			{% endfor %}
 			 
-	
+			 var options = {
+	 			showTip: true,
+          			icons: {
+            				default: {
+              					normal: 'http://58.ppalma.cl/quake.png',
+              					selected: 'http://58.ppalma.cl/quake-sel.png'
+            					}
+          				}
+        			};	
+
+			
+
 			var geoView = new google.visualization.DataView(gData);
 		        geoView.setColumns([0, 1]);
 			
@@ -122,34 +135,98 @@ width:60px;
 
 	
 			var map =  new google.visualization.Map(document.getElementById('map_div'));
-		        map.draw(geoView, {showTip: true});
-     			
+		        map.draw(geoView, options );
+     		
+			function quakeDetails(table) {
+
+				var selection = table.getSelection();
+				var message = '';
+				var item = selection[0];
+				if (item.row != null) {
+					{% for quake in quakes %}
+						if ( '{{ quake.event_date }}' == data.getValue(item.row, 0))
+							if('{{quake.p_hh|stringformat:"02d"}}:{{quake.p_mm|stringformat:"02d" }}:{{quake.p_ss|stringformat:"02d"}}.{{quake.p_ms|stringformat:"02d"}}' == data.getValue(item.row, 1))
+					{
+							message +='<table border=0>';
+	
+								message +='<tr>';
+								message +='<td>';
+									message += 'Llegada' ;
+								message +='</td>';
+								message +='<td>';
+								{% for station in quake.stations.all %}
+									message += '{{ station }}, ';
+								{% endfor %}
+								message +='</td>';
+							message +='</tr>';
+			
+	
+							message +='<tr>';
+								message +='<td>';
+									message += 'Clasificación';
+								message +='</td>';
+								message +='<td>';
+								message += '{{ quake.classification }}';
+								message +='</td>';
+							message +='</tr>';
+							message +='<tr>';
+								message +='<td>';
+									message += 'Frecuencia';
+								message +='</td>';
+								message +='<td>';
+								message += '{{quake.frecuency}}';
+								message +='</td>';
+							message +='</tr>';
+							message +='<tr>';
+								message +='<td>';
+									message += 'Epicentro';
+								message +='</td>';
+								message +='<td>';
+								message += '{{quake.latitude}},{{quake.longitude}}';
+								message +='</td>';
+							message +='</tr>';
+							
+							message +='</table>';
+								
+							 {{ break }}
+					}	
+					{% endfor %} 
+				} else if (item.column != null) {
+					message = '<table></table>';
+				}
+				if (message == '') {
+					message = '<table></table>';
+  				}
+			document.getElementById('quake_detail').innerHTML = message;
+			}
+				
 		        google.visualization.events.addListener(table, 'select',
-		            	function() {
+		            	function(e) {
 		              		map.setSelection(table.getSelection());
+					quakeDetails(table);
 				});
 			google.visualization.events.addListener(map, 'select',
        				function() {
               				table.setSelection(map.getSelection());
             			});
+
 			}
 	</script>
 
 
 <div id="content-main">
-	<body>
+<body>
 	<table border=3>
 	<tr>
-		<td> 
-			<div id='quakes_table'></div>
+		<td><div id='quakes_table'></div></td>
+		<td> <div id='map_div'></div></td>
+	</tr>
 
-		</td>
-		<td> 
-			<div id='map_div'></div>
-		</td>
+	<tr>
+		<td colspan=2><div id='quake_detail'> <div></td>
 	</tr>
 	</table>
-	</body>
+</body>
 </div>
 {% endblock %}
 

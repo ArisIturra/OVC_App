@@ -5,7 +5,10 @@ from django.db import connection
 
 from  seismicity.models import *
 
+from django import template
+
+
 def index(request):
 	quakes = Seism.objects.all().order_by('-id')[:10]
-	print quakes
 	return render_to_response('activity.html',locals())
+
