@@ -72,9 +72,37 @@ class SeismAdmin(admin.ModelAdmin):
 			'export_to_gmt_mentolat',
 			'export_to_gmt_michimahuida',
 			'export_to_gmt_yanteles',
+			'export_to_plain_txt',
 			]
 
+	def export_to_plain_txt(self,request,q):
 		
+		try:
+                        try:
+                                f = open('tmp/quakes.data', 'wr')
+
+				for seism in q:
+                                        if seism.located and seism.deep:
+                   	                     	f.write('%s %s %s %s \n'%(
+                                                               	 seism.longitude,
+                                                                 seism.latitude,
+                                                                 seism.deep,
+                                                                 seism.local_magnitude,
+                                                                 ))
+				
+			
+			finally:
+                                f.close()
+                except IOError:
+                        pass
+		
+		f=open('tmp/quakes.data', 'r')
+                response = HttpResponse(f.read(),mimetype='text/plain')
+                response['Content-Disposition'] = 'filename=quakes.data'
+
+
+		
+                return response
 	def export_to_kml(self,request,q):
 		
 		import simplekml
