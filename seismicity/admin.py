@@ -82,7 +82,7 @@ class SeismAdmin(admin.ModelAdmin):
                                 f = open('tmp/quakes.data', 'wr')
 
 				for seism in q:
-                                        if seism.located and seism.deep:
+                                        if seism.located and seism.deep != None:
                    	                     	f.write('%s %s %s %s \n'%(
                                                                	 seism.longitude,
                                                                  seism.latitude,
